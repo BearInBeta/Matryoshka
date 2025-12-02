@@ -1,8 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class GridManager : MonoBehaviour
 {
+
+    [Header("Grid Spawn Animation")]
+    [SerializeField] float spawnDropDistance = 10f;
+    [SerializeField] float tileRiseDuration = 0.3f;
+    [SerializeField] float columnDelay = 0.08f;
+    [SerializeField] AnimationCurve riseCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [SerializeField] float teleportEffectDestroy = 3f;
 
     [Header("Camera Framing")]
     public Transform cameraPivot;
@@ -23,9 +31,8 @@ public class GridManager : MonoBehaviour
     // ✅ RUNTIME ITEMS (actual instances)
     public List<Item> items = new List<Item>();
 
-    // ✅ SETUP ITEMS (inspector-driven)
+    private GameObject playerGameObject;
 
-    private LevelData currentLevel;
 
     void CenterCameraOnGrid()
     {
@@ -62,16 +69,86 @@ public class GridManager : MonoBehaviour
 
     public void LoadLevel(LevelData level)
     {
-        currentLevel = level;
+        gameObject.SetActive(false); // ✅ Hide everything
 
         ClearGrid();
         GenerateGrid(level.width, level.height);
         SpawnSetupItems(level.setUpItems);
         CenterCameraOnGrid();
 
+        OffsetAllTilesAndItemsDown();
+
+        gameObject.SetActive(true); // ✅ Reveal in dropped state
+
+        StartCoroutine(AnimateGridRise());
     }
+    IEnumerator AnimateGridRise()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (grid[x, y] != null)
+                {
+                    StartCoroutine(RiseObject(grid[x, y].transform));
+                }
+
+                Item item = GetItemAt(x, y);
+                if (item != null)
+                {
+                    StartCoroutine(RiseObject(item.transform));
+                }
+            }
+
+            yield return new WaitForSeconds(columnDelay); // ✅ Stagger by column
+        }
+        StartCoroutine(TeleportItemIn(playerGameObject));
+        playerGameObject.GetComponent<PlayerController>().StartPlayerPos();
+
+
+    }
+    void OffsetAllTilesAndItemsDown()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (grid[x, y] != null)
+                {
+                    grid[x, y].transform.position += Vector3.down * spawnDropDistance;
+                }
+
+                Item item = GetItemAt(x, y);
+                if (item != null)
+                {
+                    item.transform.position += Vector3.down * spawnDropDistance;
+                }
+            }
+        }
+    }
+    IEnumerator RiseObject(Transform target)
+    {
+        Vector3 startPos = target.position;
+        Vector3 endPos = startPos + Vector3.up * spawnDropDistance;
+
+        float elapsed = 0f;
+
+        while (elapsed < tileRiseDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / tileRiseDuration);
+            float eased = riseCurve.Evaluate(t);
+
+            target.position = Vector3.Lerp(startPos, endPos, eased);
+            yield return null;
+        }
+
+        target.position = endPos;
+    }
+
     void GenerateGrid(int width, int height)
     {
+
         this.width = width;
         this.height = height;
         grid = new GameObject[width, height];
@@ -141,7 +218,7 @@ public class GridManager : MonoBehaviour
 
             instance.transform.position =
                 GridToWorld(setup.x, setup.y,
-                instance.transform.localScale.y / 2);
+                instance.transform.localScale.y);
 
             RegisterItem(instance);
 
@@ -149,9 +226,24 @@ public class GridManager : MonoBehaviour
             {
                 RemoveTileAt(setup.x, setup.y);
             }
+
+            if (instance is PlayerController)
+            {
+                playerGameObject = instance.gameObject;
+                instance.gameObject.SetActive(false);
+            }
         }
     }
 
+    IEnumerator TeleportItemIn(GameObject gameObject)
+    {
+        FindObjectOfType<SFXManager>().PlayClip("start");
+
+        gameObject.SetActive(true);
+        GameObject teleportEffectGO = Instantiate(teleportEffect, gameObject.transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(teleportEffectDestroy);
+        Destroy(teleportEffectGO);
+    }
 
     public void RegisterItem(Item item)
     {

@@ -37,13 +37,7 @@ public class PlayerController : Item
 
     private void Start()
     {
-        gridManager = FindObjectOfType<GridManager>();
 
-        Vector3 startWorldPos =
-            gridManager.GridToWorld(x, y) + Vector3.up * heightOffset;
-
-        transform.position = startWorldPos;
-        targetPosition = startWorldPos;
     }
 
     private void Update()
@@ -61,6 +55,15 @@ public class PlayerController : Item
         }
     }
 
+    public void StartPlayerPos()
+    {
+        gridManager = FindObjectOfType<GridManager>();
+
+        Vector3 startWorldPos = gridManager.GridToWorld(x, y) + Vector3.up * heightOffset * 2;
+
+        transform.position = startWorldPos;
+        targetPosition = startWorldPos;
+    }
     // This gets called automatically by PlayerInput component
     public void OnMove(InputAction.CallbackContext ctx)
     {
