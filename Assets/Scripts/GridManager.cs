@@ -10,7 +10,6 @@ public class GridManager : MonoBehaviour
     [SerializeField] float tileRiseDuration = 0.3f;
     [SerializeField] float columnDelay = 0.08f;
     [SerializeField] AnimationCurve riseCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-    [SerializeField] float teleportEffectDestroy = 3f;
 
     [Header("Camera Framing")]
     public Transform cameraPivot;
@@ -69,6 +68,7 @@ public class GridManager : MonoBehaviour
 
     public void LoadLevel(LevelData level)
     {
+        GetComponent<MaterialColorApplier>().ApplyColors();
         gameObject.SetActive(false); // ✅ Hide everything
 
         ClearGrid();
@@ -240,9 +240,8 @@ public class GridManager : MonoBehaviour
         FindObjectOfType<SFXManager>().PlayClip("start");
 
         gameObject.SetActive(true);
-        GameObject teleportEffectGO = Instantiate(teleportEffect, gameObject.transform.position, Quaternion.identity);
-        yield return new WaitForSeconds(teleportEffectDestroy);
-        Destroy(teleportEffectGO);
+        Instantiate(teleportEffect, gameObject.transform.position, Quaternion.identity);
+        yield return null;
     }
 
     public void RegisterItem(Item item)

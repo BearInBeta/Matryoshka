@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 7
   height: 7
-  setUpItems: []
-  musicClip: {fileID: 8300000, guid: 44ad68dd958e87048b7e47f7537f00aa, type: 3}
+  setUpItems:
+  - itemPrefab: {fileID: 4590949748391226555, guid: 85e23b4a14b58d845838b21311af06bf, type: 3}
+    x: 0
+    y: 0
