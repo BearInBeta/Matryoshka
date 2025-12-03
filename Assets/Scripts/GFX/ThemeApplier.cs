@@ -31,6 +31,12 @@ public class ThemeApplier : MonoBehaviour
             mca.color = themeData.stacheColor;
         }
 
+        PlayerController[] pccs = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+        foreach (PlayerController pcc in pccs)
+        {
+            pcc.invalidFlashColor = themeData.flashColor;
+        }
+
         symbol.color = themeData.textColor;
         moustache.color = themeData.stacheColor;
         themeMusicSource.clip = themeData.themeMusic;

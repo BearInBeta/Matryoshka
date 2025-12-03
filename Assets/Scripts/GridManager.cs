@@ -93,9 +93,9 @@ public class GridManager : MonoBehaviour
 
             yield return new WaitForSeconds(columnDelay);
         }
+        playerGameObject.GetComponent<PlayerController>().StartPlayerPos();
 
         StartCoroutine(TeleportItemIn(playerGameObject));
-        playerGameObject.GetComponent<PlayerController>().StartPlayerPos();
     }
 
     void OffsetAllTilesAndItemsDown()
@@ -231,6 +231,8 @@ public class GridManager : MonoBehaviour
         FindFirstObjectByType<SFXManager>().PlayClip("start");
 
         gameObject.SetActive(true);
+        GetComponent<ThemeApplier>().ApplyColors();
+
         Instantiate(teleportEffect, gameObject.transform.position, Quaternion.identity);
         yield return null;
     }

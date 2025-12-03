@@ -41,7 +41,7 @@ public class PlayerController : Item
     public float heightOffset = 0.6f;
 
     [Header("Invalid Orientation Feedback")]
-    [SerializeField] Color invalidFlashColor = new Color(1f, 0.3f, 0.3f, 1f);
+    public Color invalidFlashColor = new Color(1f, 0.3f, 0.3f, 1f);
     [SerializeField] float flashDuration = 0.12f;
 
     [SerializeField] float recoilDistance = 0.08f;

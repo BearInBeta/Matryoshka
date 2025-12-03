@@ -420,7 +420,7 @@ MonoBehaviour:
   width: 0
   height: 0
   tilePrefab: {fileID: 1554661116542443062, guid: bf6de5f9ce7f8dd4a936a0704ca576f5, type: 3}
-  teleportEffect: {fileID: 8782080555954114532, guid: b6b63c8869f5fcb47a67dfe4a541bb68, type: 3}
+  teleportEffect: {fileID: 100006, guid: 9570f8116e9822e40bb18133251cc114, type: 3}
   items: []
 --- !u!4 &472432091
 Transform:
@@ -467,7 +467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d5ce95b9fed0542be0f48e75869861, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  themeData: {fileID: 11400000, guid: 6a3963aec56e52744a0a1d4cb7d0e7f9, type: 2}
+  themeData: {fileID: 11400000, guid: 9636bb843e49c354c8cd969a5fb2d40b, type: 2}
   maincam: {fileID: 1969372708}
   themeMusicSource: {fileID: 372815997}
   symbol: {fileID: 1318925625}
@@ -620,8 +620,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 0
-  m_fontColor: {r: 0, g: 0, b: 0, a: 0}
+    rgba: 4293646981
+  m_fontColor: {r: 0.52156866, g: 0.854902, b: 0.9215687, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -873,7 +873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_Color: {r: 0.52156866, g: 0.854902, b: 0.9215687, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1198,8 +1198,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 0
-  m_fontColor: {r: 0, g: 0, b: 0, a: 0}
+    rgba: 4293646981
+  m_fontColor: {r: 0.52156866, g: 0.854902, b: 0.9215687, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1504,7 +1504,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.04705883, g: 0.43137258, b: 0.77647066, a: 1}
+  m_BackGroundColor: {r: 0.19607845, g: 0.19215688, b: 0.23137257, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
