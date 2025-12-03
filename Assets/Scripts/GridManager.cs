@@ -58,7 +58,7 @@ public class GridManager : MonoBehaviour
 
     public void LoadLevel(LevelData level)
     {
-        GetComponent<MaterialColorApplier>().ApplyColors();
+        GetComponent<ThemeApplier>().ApplyColors();
         gameObject.SetActive(false);
 
         ClearGrid();

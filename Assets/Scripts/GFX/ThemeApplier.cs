@@ -1,27 +1,41 @@
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+
+
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 [ExecuteAlways]
-public class MaterialColorApplier : MonoBehaviour
+public class ThemeApplier : MonoBehaviour
 {
-    [System.Serializable]
-    public class MaterialColorPair
-    {
-        public Material material;
-        public Color color = Color.white;
-    }
-    public Color backgroundColor = Color.white;
-    public List<MaterialColorPair> materialColors = new List<MaterialColorPair>();
+    public ThemeData themeData;
     [SerializeField] Camera maincam;
+    [SerializeField] AudioSource themeMusicSource;
+    [SerializeField] Image symbol, moustache;
     [ContextMenu("Apply Colors To Materials")]
     public void ApplyColors()
     {
-        maincam.backgroundColor = backgroundColor;
-        foreach (var pair in materialColors)
+        TMP_Text[] allTexts = FindObjectsByType<TMP_Text>(FindObjectsSortMode.None);
+        foreach (TMP_Text text in allTexts)
+        {
+            text.color = themeData.textColor;
+        }
+
+        MoustacheColorApplier[] mcas = FindObjectsByType<MoustacheColorApplier>(FindObjectsSortMode.None);
+        foreach (MoustacheColorApplier mca in mcas)
+        {
+            mca.color = themeData.stacheColor;
+        }
+
+        symbol.color = themeData.textColor;
+        moustache.color = themeData.stacheColor;
+        themeMusicSource.clip = themeData.themeMusic;
+        maincam.backgroundColor = themeData.backgroundColor;
+        foreach (var pair in themeData.materialColors)
         {
             if (pair.material == null)
                 continue;

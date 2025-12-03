@@ -59,6 +59,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3717259636202487840}
   - component: {fileID: 8713275745399789365}
+  - component: {fileID: 5810127054814361254}
   m_Layer: 0
   m_Name: moustache
   m_TagString: Untagged
@@ -136,6 +137,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5810127054814361254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7310639841194844979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9965ac5bcdb277345afda60a17cac2d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1001 &6872638582837203512
 PrefabInstance:
   m_ObjectHideFlags: 0
