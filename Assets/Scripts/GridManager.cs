@@ -4,7 +4,6 @@ using System.Collections;
 
 public class GridManager : MonoBehaviour
 {
-
     [Header("Grid Spawn Animation")]
     [SerializeField] float spawnDropDistance = 10f;
     [SerializeField] float tileRiseDuration = 0.3f;
@@ -14,10 +13,9 @@ public class GridManager : MonoBehaviour
     [Header("Camera Framing")]
     public Transform cameraPivot;
     public Camera mainCamera;
-    public float cameraPadding = 1f; // extra breathing room
+    public float cameraPadding = 1f;
 
     [Header("Grid Data")]
-
     public int width = 7;
     public int height = 7;
     float tileSize = 1f;
@@ -32,23 +30,18 @@ public class GridManager : MonoBehaviour
 
     private GameObject playerGameObject;
 
+    // ===============================
+    // ✅ CAMERA
+    // ===============================
 
     void CenterCameraOnGrid()
     {
         if (mainCamera == null || cameraPivot == null)
             return;
 
-        // --- ORTHOGRAPHIC SIZE ---
-        float dominant = (float)Mathf.Max(width, height);
-
-        // This exactly matches:
-        // 1×1 → 1
-        // 4×4 → 2
-        // 5×1 → 2
+        float dominant = Mathf.Max(width, height);
         float ortho = dominant / 2f;
         mainCamera.orthographicSize = ortho;
-
-        // --- PIVOT POSITION ---
 
         float diff = width - height;
 
@@ -56,20 +49,17 @@ public class GridManager : MonoBehaviour
         float pivotZ = diff > 0 ? diff * 0.5f : -0.5f;
         float pivotY = ortho * 1.0f;
 
-        cameraPivot.position = new Vector3(
-            pivotX,
-            pivotY,
-            pivotZ
-        );
+        cameraPivot.position = new Vector3(pivotX, pivotY, pivotZ);
     }
 
-
-
+    // ===============================
+    // ✅ LEVEL LOADING
+    // ===============================
 
     public void LoadLevel(LevelData level)
     {
         GetComponent<MaterialColorApplier>().ApplyColors();
-        gameObject.SetActive(false); // ✅ Hide everything
+        gameObject.SetActive(false);
 
         ClearGrid();
         GenerateGrid(level.width, level.height);
@@ -78,10 +68,11 @@ public class GridManager : MonoBehaviour
 
         OffsetAllTilesAndItemsDown();
 
-        gameObject.SetActive(true); // ✅ Reveal in dropped state
+        gameObject.SetActive(true);
 
         StartCoroutine(AnimateGridRise());
     }
+
     IEnumerator AnimateGridRise()
     {
         for (int x = 0; x < width; x++)
@@ -93,20 +84,20 @@ public class GridManager : MonoBehaviour
                     StartCoroutine(RiseObject(grid[x, y].transform));
                 }
 
-                Item item = GetItemAt(x, y);
-                if (item != null)
+                List<Item> tileItems = GetItemsAt(x, y);
+                foreach (Item item in tileItems)
                 {
                     StartCoroutine(RiseObject(item.transform));
                 }
             }
 
-            yield return new WaitForSeconds(columnDelay); // ✅ Stagger by column
+            yield return new WaitForSeconds(columnDelay);
         }
+
         StartCoroutine(TeleportItemIn(playerGameObject));
         playerGameObject.GetComponent<PlayerController>().StartPlayerPos();
-
-
     }
+
     void OffsetAllTilesAndItemsDown()
     {
         for (int x = 0; x < width; x++)
@@ -118,14 +109,15 @@ public class GridManager : MonoBehaviour
                     grid[x, y].transform.position += Vector3.down * spawnDropDistance;
                 }
 
-                Item item = GetItemAt(x, y);
-                if (item != null)
+                List<Item> tileItems = GetItemsAt(x, y);
+                foreach (Item item in tileItems)
                 {
                     item.transform.position += Vector3.down * spawnDropDistance;
                 }
             }
         }
     }
+
     IEnumerator RiseObject(Transform target)
     {
         Vector3 startPos = target.position;
@@ -146,9 +138,12 @@ public class GridManager : MonoBehaviour
         target.position = endPos;
     }
 
+    // ===============================
+    // ✅ GRID
+    // ===============================
+
     void GenerateGrid(int width, int height)
     {
-
         this.width = width;
         this.height = height;
         grid = new GameObject[width, height];
@@ -199,7 +194,7 @@ public class GridManager : MonoBehaviour
     }
 
     // ===============================
-    // ✅ ITEM SYSTEM
+    // ✅ ITEM SYSTEM (MULTI-ITEM SAFE)
     // ===============================
 
     void SpawnSetupItems(List<ItemSetup> setUpItems)
@@ -208,13 +203,9 @@ public class GridManager : MonoBehaviour
 
         foreach (ItemSetup setup in setUpItems)
         {
-
             Item instance = Instantiate(setup.itemPrefab, transform);
 
-
             instance.Initialize(setup.x, setup.y);
-
-
 
             instance.transform.position =
                 GridToWorld(setup.x, setup.y,
@@ -249,15 +240,18 @@ public class GridManager : MonoBehaviour
         items.Add(item);
     }
 
-    public Item GetItemAt(int x, int y)
+    // ✅ NEW: MULTIPLE ITEMS PER TILE
+    public List<Item> GetItemsAt(int x, int y)
     {
+        List<Item> result = new List<Item>();
+
         for (int i = 0; i < items.Count; i++)
         {
             if (items[i].x == x && items[i].y == y)
-                return items[i];
+                result.Add(items[i]);
         }
 
-        return null;
+        return result;
     }
 
     public void RemoveItem(Item item)
@@ -278,5 +272,4 @@ public class GridManager : MonoBehaviour
             grid[x, y] = null;
         }
     }
-
 }

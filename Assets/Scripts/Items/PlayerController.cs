@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -6,6 +7,10 @@ using UnityEngine.UIElements;
 public class PlayerController : Item
 {
     enum Direction { Up, Down, Left, Right };
+
+    [Header("Player Pieces")]
+    [SerializeField] GameObject topPiece;
+    [SerializeField] GameObject bottomPiece;
 
     [Header("Jump Movement")]
     [SerializeField] float jumpDuration = 0.35f;
@@ -34,6 +39,15 @@ public class PlayerController : Item
     public float moveSpeed = 5f;
     public float heightOffset = 0.6f;
 
+    [Header("Invalid Orientation Feedback")]
+    [SerializeField] Color invalidFlashColor = new Color(1f, 0.3f, 0.3f, 1f);
+    [SerializeField] float flashDuration = 0.12f;
+
+    [SerializeField] float recoilDistance = 0.08f;
+    [SerializeField] float recoilDuration = 0.15f;
+    [SerializeField] AnimationCurve recoilCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+
     private bool isMoving = false;
     private Vector3 targetPosition;
     private GridManager gridManager;
@@ -41,6 +55,7 @@ public class PlayerController : Item
     private Vector2 moveInput;
 
     private Coroutine movementCoroutine;
+    private Coroutine feedbackCoroutine;
 
     private void Start()
     {
@@ -119,11 +134,28 @@ public class PlayerController : Item
 
     private void AttemptMove(int moveX, int moveY)
     {
-        
-
         if (moveX == 0 && moveY == 0)
             return;
 
+        // ============================
+        // ✅ LAUNCHER CHECK (CURRENT TILE)
+        // ============================
+
+        activeLauncher = null;
+        List<Item> currentTileItems = gridManager.GetItemsAt(x, y);
+
+        foreach (Item item in currentTileItems)
+        {
+            if (item is Launcher launcher)
+            {
+                activeLauncher = launcher;
+                break;
+            }
+        }
+
+        // ============================
+        // ✅ DISTANCE CALCULATION
+        // ============================
 
         int distance = 0;
 
@@ -134,70 +166,95 @@ public class PlayerController : Item
 
         int extraX = 0;
         int extraY = 0;
+
         switch (GetDirection(moveX, moveY))
         {
             case Direction.Up: extraX = distance; break;
             case Direction.Down: extraX = -distance; break;
             case Direction.Right: extraY = distance; break;
             case Direction.Left: extraY = -distance; break;
-
         }
 
         int newX = x + moveX + extraX;
         int newY = y + moveY + extraY;
 
-        activeLauncher = null;
+        // ============================
+        // ✅ SKIP EMPTY / OUT OF BOUNDS
+        // ============================
 
-        while((!IsInsideGrid(newX, newY) || gridManager.GetItemAt(newX, newY) is Empty) && (extraX > 0 || extraY > 0))
+        while ((!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY)))
+               && (extraX != 0 || extraY != 0))
         {
-            if (extraX > 0)
+            if (extraX != 0)
                 extraX = (int)(Mathf.Sign(extraX) * (Mathf.Abs(extraX) - 1));
 
-            if (extraY > 0)
+            if (extraY != 0)
                 extraY = (int)(Mathf.Sign(extraY) * (Mathf.Abs(extraY) - 1));
+
             newX = x + moveX + extraX;
             newY = y + moveY + extraY;
         }
-        if (!IsInsideGrid(newX, newY) || gridManager.GetItemAt(newX, newY) is Empty)
-        {
+
+        if (!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY)))
             return;
+
+        // ============================
+        // ✅ TILE ITEM RESOLUTION
+        // ============================
+
+        List<Item> targetItems = gridManager.GetItemsAt(newX, newY);
+
+        // 1. Doll Piece has highest priority
+        foreach (Item item in targetItems)
+        {
+            if (item is DollPiece dollPiece)
+            {
+                HandleDollPiece(dollPiece, newX, newY);
+                return;
+            }
         }
-           
 
-        Item item = gridManager.GetItemAt(newX, newY);
+        // 2. Launcher
+        foreach (Item item in targetItems)
+        {
+            if (item is Launcher)
+            {
+                ExecuteMove(newX, newY);
+                return;
+            }
+        }
 
-        if (item == null)
+        // 3. Winning Gate
+        foreach (Item item in targetItems)
+        {
+            if (item is WinningGate winningGate)
+            {
+                HandleWinningGate(winningGate, newX, newY);
+                return;
+            }
+        }
+
+        // 4. Empty tile is already filtered earlier
+
+        // 5. No blocking item → normal move
+        if (targetItems.Count == 0)
         {
             ExecuteMove(newX, newY);
             return;
         }
-
-        // Dispatch by item type
-        if (item is DollPiece dollPiece)
-        {
-            HandleDollPiece(dollPiece, newX, newY);
-            return;
-        }
-
-        if (item is WinningGate winningGate)
-        {
-            HandleWinningGate(winningGate, newX, newY);
-            return;
-        }
-        if (item is Launcher launcher)
-        {
-            HandleLauncher(launcher, newX, newY);
-            return;
-        }
-
-        
     }
-    private void HandleLauncher(Launcher launcher, int newX, int newY)
+    private bool ContainsEmpty(List<Item> items)
     {
-        // Step onto the launcher normally
-        activeLauncher = launcher;
-        ExecuteMove(newX, newY);
+        foreach (Item item in items)
+        {
+            if (item is Empty)
+                return true;
+        }
+
+        return false;
     }
+
+
 
     private bool IsInsideGrid(int x, int y)
     {
@@ -382,18 +439,119 @@ public class PlayerController : Item
 
         // Size rule: must be exactly +1
         if (piece.size != activeSize + 1)
+        {
+            if(isUpsideDown)
+                PlayInvalidOrientationFeedback(piece.gameObject.GetComponentInChildren<MeshRenderer>().gameObject, topPiece);
+            else
+                PlayInvalidOrientationFeedback(piece.gameObject.GetComponentInChildren<MeshRenderer>().gameObject, bottomPiece);
+
             return;
+        }
+        
 
         bool orientationMatch =
             (!isUpsideDown && piece.type == DollPieceType.Top) ||
             (isUpsideDown && piece.type == DollPieceType.Bottom);
 
         if (!orientationMatch)
-            return;
+        {
+            if(isUpsideDown && piece.type == DollPieceType.Top)
+            {
+                PlayInvalidOrientationFeedback(piece.gameObject.GetComponentInChildren<MeshRenderer>().gameObject, topPiece);
+            }
+            else
+            {
+                PlayInvalidOrientationFeedback(piece.gameObject.GetComponentInChildren<MeshRenderer>().gameObject, bottomPiece);
 
+
+            }
+            return;
+        }
+           
+   
         AttachPiece(piece);
         ExecuteMove(newX, newY);
     }
+
+    public void PlayInvalidOrientationFeedback(GameObject dollPieceObj, GameObject playerPieceObj)
+    {
+        if (feedbackCoroutine != null)
+            StopCoroutine(feedbackCoroutine);
+
+        feedbackCoroutine = StartCoroutine(
+            InvalidOrientationRoutine(dollPieceObj, playerPieceObj)
+        );
+
+        FindFirstObjectByType<SFXManager>().PlayClip("error");
+    }
+    private IEnumerator InvalidOrientationRoutine(GameObject dollPieceObj, GameObject playerPieceObj)
+    {
+        // Start both flashes in parallel
+        Coroutine flash1 = StartCoroutine(FlashObject(dollPieceObj));
+        Coroutine flash2 = StartCoroutine(FlashObject(playerPieceObj));
+
+        // Start recoil at the same time
+        yield return StartCoroutine(RecoilFromTarget(dollPieceObj.transform));
+
+        // Ensure flashes are fully finished
+        if (flash1 != null) yield return flash1;
+        if (flash2 != null) yield return flash2;
+
+        feedbackCoroutine = null;
+    }
+    private IEnumerator FlashObject(GameObject obj)
+    {
+        if (obj == null)
+            yield break;
+
+        Renderer r = obj.GetComponentInChildren<Renderer>();
+        if (r == null)
+            yield break;
+
+        Material mat = r.material; // instance copy
+        Color original = mat.color;
+
+        mat.color = invalidFlashColor;
+        yield return new WaitForSeconds(flashDuration);
+        mat.color = original;
+    }
+    private IEnumerator RecoilFromTarget(Transform target)
+    {
+        if (target == null)
+            yield break;
+
+        Vector3 startPos = transform.position;
+
+        // Direction toward the invalid piece (flattened vertically)
+        Vector3 dir = (target.position - startPos);
+        dir.y = 0f;
+        dir.Normalize();
+
+        Vector3 recoilTarget = startPos + dir * recoilDistance;
+
+        float elapsed = 0f;
+
+        while (elapsed < recoilDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / recoilDuration);
+            float eased = recoilCurve.Evaluate(t);
+
+            // Ping-pong style recoil (toward then back)
+            float pingPong = Mathf.Sin(t * Mathf.PI);
+
+            transform.position = Vector3.Lerp(
+                startPos,
+                recoilTarget,
+                pingPong * eased
+            );
+
+            yield return null;
+        }
+
+        transform.position = startPos;
+    }
+
     private void HandleWinningGate(WinningGate gate, int newX, int newY)
     {
         ExecuteMove(newX, newY);
@@ -405,8 +563,12 @@ public class PlayerController : Item
         {
             yield return new WaitForEndOfFrame();
         }
-        gate.TryWin(topSize, bottomSize, isUpsideDown, gameObject);
-
+        bool win = gate.TryWin(topSize, bottomSize, isUpsideDown, gameObject);
+        if(!win)
+        {
+            PlayInvalidOrientationFeedback(gate.gameObject, bottomPiece);
+            
+        }
     }
 
     private void AttachPiece(DollPiece piece)
@@ -416,6 +578,7 @@ public class PlayerController : Item
         if (piece.type == DollPieceType.Top)
         {
             // Stack upward from the top half
+            topPiece = piece.gameObject.GetComponentInChildren<MeshRenderer>().gameObject;
             localOffset = Vector3.up * (topSize * 0.4f);
             topSize = piece.size;
 
@@ -423,6 +586,8 @@ public class PlayerController : Item
         else // Bottom
         {
             // Stack downward from the bottom half
+            bottomPiece = piece.gameObject.GetComponentInChildren<MeshRenderer>().gameObject;
+
             localOffset = Vector3.down * (bottomSize * 0.4f);
             bottomSize = piece.size;
 
@@ -456,12 +621,3 @@ public class PlayerController : Item
 
 
 }
-
-
-
-
-
-
-
-
-

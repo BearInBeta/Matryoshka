@@ -696,6 +696,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 6736919fbf90bb748bf615e47c80c5b6, type: 3}
   - name: start
     clip: {fileID: 8300000, guid: 933a1ca8ce1c04645837df5c3a83a541, type: 3}
+  - name: error
+    clip: {fileID: 8300000, guid: 55c12a0ce6f709a4da4a4a1845d20e59, type: 3}
 --- !u!1 &1954377059
 GameObject:
   m_ObjectHideFlags: 0

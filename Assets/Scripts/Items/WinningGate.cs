@@ -6,13 +6,15 @@ public class WinningGate : Item
     [Header("Win Condition")]
     public int requiredSize;
     [SerializeField] GameObject teleportEffect;
-    public void TryWin(int playerTopSize, int playerBottomSize, bool isUpsideDown, GameObject playerObject)
+    public bool TryWin(int playerTopSize, int playerBottomSize, bool isUpsideDown, GameObject playerObject)
     {
         if (playerTopSize == requiredSize &&
             playerBottomSize == requiredSize && !isUpsideDown)
         {
             StartCoroutine(TeleportPlayer(playerObject));
+            return true;
         }
+        return false;
     }
 
     IEnumerator TeleportPlayer(GameObject playerObject)
