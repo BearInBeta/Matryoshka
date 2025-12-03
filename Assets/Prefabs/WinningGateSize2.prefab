@@ -27,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4463568090275306119}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.02, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7940694264259971327
 MeshFilter:
@@ -123,5 +123,4 @@ MonoBehaviour:
   x: 0
   y: 5
   requiredSize: 2
-  teleportWait: 0.5
-  teleportEffect: {fileID: 715165127304888992, guid: 01a24eb02eef8d44d9f8b2260b955108, type: 3}
+  teleportEffect: {fileID: 3161443724554866943, guid: 61d405a9a05de0544b08d26e9a40c231, type: 3}
