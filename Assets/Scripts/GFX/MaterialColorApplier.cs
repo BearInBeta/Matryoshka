@@ -40,14 +40,20 @@ public class MaterialColorApplier : MonoBehaviour
 #endif
     }
 
-    // Optional: Auto-apply when values change in the Inspector (Editor only)
+#if UNITY_EDITOR
     private void OnValidate()
     {
-#if UNITY_EDITOR
         if (!Application.isPlaying)
         {
-            ApplyColors();
+            UnityEditor.EditorApplication.delayCall += () =>
+            {
+                if (this != null)   // Object might have been destroyed
+                {
+                    ApplyColors();
+                }
+            };
         }
-#endif
     }
+#endif
+
 }

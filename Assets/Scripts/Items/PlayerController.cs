@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -47,7 +48,7 @@ public class PlayerController : Item
     [SerializeField] float recoilDuration = 0.15f;
     [SerializeField] AnimationCurve recoilCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-
+    GameManager gameManager;
     private bool isMoving = false;
     private Vector3 targetPosition;
     private GridManager gridManager;
@@ -59,7 +60,8 @@ public class PlayerController : Item
 
     private void Start()
     {
-
+        gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        gameManager.UpdateSizeText(topSize, bottomSize);
     }
 
     private void Update()
@@ -570,7 +572,7 @@ public class PlayerController : Item
             
         }
     }
-
+    
     private void AttachPiece(DollPiece piece)
     {
         Vector3 localOffset;
@@ -592,7 +594,7 @@ public class PlayerController : Item
             bottomSize = piece.size;
 
         }
-
+        gameManager.UpdateSizeText(topSize, bottomSize);
         gridManager.RemoveItem(piece);
 
         piece.AttachTo(transform, localOffset);

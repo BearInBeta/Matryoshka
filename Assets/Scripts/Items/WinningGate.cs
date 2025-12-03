@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class WinningGate : Item
@@ -6,6 +7,12 @@ public class WinningGate : Item
     [Header("Win Condition")]
     public int requiredSize;
     [SerializeField] GameObject teleportEffect;
+
+    private void Start()
+    {
+        if(GetComponentInChildren<TextMeshPro>() != null)
+        GetComponentInChildren<TextMeshPro>().text = requiredSize + "";
+    }
     public bool TryWin(int playerTopSize, int playerBottomSize, bool isUpsideDown, GameObject playerObject)
     {
         if (playerTopSize == requiredSize &&

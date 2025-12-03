@@ -292,6 +292,74 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Testing",
+            "id": "84ebeabf-a8ac-48c1-9949-cfe42a3fc5af",
+            "actions": [
+                {
+                    "name": "Reset",
+                    "type": "Button",
+                    "id": "bbeb9a7a-e39a-453b-b64b-64274039f183",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Previous",
+                    "type": "Button",
+                    "id": "33e17a40-9d6e-4ed0-8115-3ab205184afb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Next",
+                    "type": "Button",
+                    "id": "96188070-202e-4426-ab0b-0fd680e337c0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "861cdd20-f102-4e83-91fb-e742dd06719b",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6d4b605b-df5e-4957-ac31-ef05feb61858",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Previous",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c16227e8-07d8-4d9e-bfd4-f3883cfec480",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Next",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

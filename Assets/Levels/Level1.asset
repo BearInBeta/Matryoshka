@@ -15,9 +15,6 @@ MonoBehaviour:
   width: 3
   height: 6
   setUpItems:
-  - itemPrefab: {fileID: 4590949748391226555, guid: 85e23b4a14b58d845838b21311af06bf, type: 3}
-    x: 1
-    y: 0
   - itemPrefab: {fileID: 584134196615349350, guid: a104285feea0335499b9a1fd3cf9fe4d, type: 3}
     x: 0
     y: 1
@@ -33,3 +30,6 @@ MonoBehaviour:
   - itemPrefab: {fileID: 6528339407175856985, guid: ced612e1b9e2933468c1d6e34bf561d1, type: 3}
     x: 1
     y: 3
+  - itemPrefab: {fileID: 4590949748391226555, guid: 85e23b4a14b58d845838b21311af06bf, type: 3}
+    x: 1
+    y: 0
