@@ -237,7 +237,7 @@ public class GridManager : MonoBehaviour
 
     IEnumerator TeleportItemIn(GameObject gameObject)
     {
-        FindObjectOfType<SFXManager>().PlayClip("start");
+        FindFirstObjectByType<SFXManager>().PlayClip("start");
 
         gameObject.SetActive(true);
         Instantiate(teleportEffect, gameObject.transform.position, Quaternion.identity);

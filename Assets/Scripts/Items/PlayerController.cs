@@ -7,6 +7,11 @@ public class PlayerController : Item
 {
     enum Direction { Up, Down, Left, Right };
 
+    [Header("Jump Movement")]
+    [SerializeField] float jumpDuration = 0.35f;
+    [SerializeField] float jumpArcHeight = 1.2f;
+
+
     [Header("Launcher State")]
     private Launcher activeLauncher = null;
 
@@ -35,6 +40,8 @@ public class PlayerController : Item
 
     private Vector2 moveInput;
 
+    private Coroutine movementCoroutine;
+
     private void Start()
     {
 
@@ -57,7 +64,7 @@ public class PlayerController : Item
 
     public void StartPlayerPos()
     {
-        gridManager = FindObjectOfType<GridManager>();
+        gridManager = FindFirstObjectByType<GridManager>();
 
         Vector3 startWorldPos = gridManager.GridToWorld(x, y) + Vector3.up * heightOffset * 2;
 
@@ -208,17 +215,166 @@ public class PlayerController : Item
         targetPosition =
             gridManager.GridToWorld(x, y) + Vector3.up * heightOffset;
 
+        bool isJump = Mathf.Abs(dx) > 1 || Mathf.Abs(dy) > 1;
+
+        // Stop any active movement coroutine
+        if (movementCoroutine != null)
+            StopCoroutine(movementCoroutine);
+
+        if (isJump)
+            movementCoroutine = StartCoroutine(JumpToTarget());
+        else
+            movementCoroutine = StartCoroutine(MoveToTargetLinear());
+
         isMoving = true;
 
         Flip(dx, dy);
 
-        if(Mathf.Abs(dx) > 1 || Mathf.Abs(dy) > 1)
-            FindObjectOfType<SFXManager>().PlayClip("jump");
+        if (isJump)
+            FindFirstObjectByType<SFXManager>().PlayClip("jump");
         else
-            FindObjectOfType<SFXManager>().PlayClip("step");
-
-
+            FindFirstObjectByType<SFXManager>().PlayClip("step");
     }
+    private IEnumerator MoveToTargetLinear()
+    {
+        while (Vector3.Distance(transform.position, targetPosition) > 0.001f)
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                targetPosition,
+                moveSpeed * Time.deltaTime
+            );
+
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+        isMoving = false;
+    }
+
+    private IEnumerator JumpToTarget()
+    {
+        Vector3 start = transform.position;
+        Vector3 end = targetPosition;
+
+        float elapsed = 0f;
+
+        while (elapsed < jumpDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / jumpDuration);
+
+            // Horizontal interpolation
+            Vector3 flatPos = Vector3.Lerp(start, end, t);
+
+            // Vertical parabolic arc
+            float height = 4f * jumpArcHeight * t * (1f - t);
+
+            transform.position = flatPos + Vector3.up * height;
+
+            yield return null;
+        }
+
+        transform.position = end;
+        isMoving = false;
+    }
+
+    private void Flip(int dx, int dy)
+    {
+        bool startedUpsideDown = isUpsideDown;
+
+        // Toggle vertical orientation (this is the logical state)
+        isUpsideDown = !isUpsideDown;
+
+        float yRotation = 0f;
+        float zRotation = isUpsideDown ? 180f : 0f;
+
+        Direction direction = GetDirection(dx, dy);
+
+        switch (direction)
+        {
+            case Direction.Up: yRotation = 0f; break;
+            case Direction.Down: yRotation = 180f; break;
+            case Direction.Right: yRotation = -90f; break;
+            case Direction.Left: yRotation = 90f; break;
+
+        }
+
+
+        Quaternion targetRotation = Quaternion.Euler(0f, yRotation, zRotation);
+
+        // If a previous rotation is running, snap to its target first
+        if (rotationCoroutine != null)
+        {
+            StopCoroutine(rotationCoroutine);
+            // Snap to the new *correct* rotation so logic and visuals match
+            transform.rotation = targetRotation;
+        }
+
+
+        rotationCoroutine = StartCoroutine(
+            RotateTo(targetRotation, startedUpsideDown)
+        );
+    }
+
+
+    private void MoveToTarget()
+    {
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            targetPosition,
+            moveSpeed * Time.deltaTime
+        );
+
+        if (Vector3.Distance(transform.position, targetPosition) < 0.001f)
+        {
+            transform.position = targetPosition;
+            isMoving = false;
+        }
+    }
+
+
+
+
+    private IEnumerator RotateTo(Quaternion targetRotation, bool startedUpsideDown)
+    {
+        transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, targetRotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+
+        Quaternion startRotation = transform.rotation;
+        float elapsed = 0f;
+
+        // Determine the primary axis of rotation in local space
+        // Since you only rotate around Y and Z, we can safely animate in Euler space
+        Vector3 startEuler = startRotation.eulerAngles;
+        Vector3 targetEuler = targetRotation.eulerAngles;
+
+        // Normalize angles to -180..180 for clean delta math
+        float deltaY = Mathf.DeltaAngle(startEuler.y, targetEuler.y);
+        float deltaZ = Mathf.DeltaAngle(startEuler.z, targetEuler.z);
+
+
+        deltaY = -deltaY;
+        deltaZ = -deltaZ;
+
+
+        while (elapsed < rotationDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / rotationDuration);
+
+            float currentY = startEuler.y + deltaY * t;
+            float currentZ = startEuler.z + deltaZ * t;
+
+            transform.rotation = Quaternion.Euler(0f, currentY, currentZ);
+
+            yield return null;
+        }
+
+        // Hard snap to the correct logical rotation at the end
+        transform.rotation = targetRotation;
+        rotationCoroutine = null;
+    }
+
 
     private void HandleDollPiece(DollPiece piece, int newX, int newY)
     {
@@ -275,63 +431,9 @@ public class PlayerController : Item
         gridManager.RemoveItem(piece);
 
         piece.AttachTo(transform, localOffset);
-        FindObjectOfType<SFXManager>().PlayClip("attach");
+        FindFirstObjectByType<SFXManager>().PlayClip("attach");
 
 
-    }
-
-
-    private void MoveToTarget()
-    {
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            targetPosition,
-            moveSpeed * Time.deltaTime
-        );
-
-        if (Vector3.Distance(transform.position, targetPosition) < 0.001f)
-        {
-            transform.position = targetPosition;
-            isMoving = false;
-        }
-    }
-
-    private void Flip(int dx, int dy)
-    {
-        bool startedUpsideDown = isUpsideDown;
-
-        // Toggle vertical orientation (this is the logical state)
-        isUpsideDown = !isUpsideDown;
-
-        float yRotation = 0f;
-        float zRotation = isUpsideDown ? 180f : 0f;
-
-        Direction direction = GetDirection(dx, dy);
-
-        switch (direction)
-        {
-            case Direction.Up: yRotation = 0f;break;
-            case Direction.Down: yRotation = 180f; break;
-            case Direction.Right: yRotation = -90f; break;
-            case Direction.Left: yRotation = 90f; break;
-
-        }
-
-
-        Quaternion targetRotation = Quaternion.Euler(0f, yRotation, zRotation);
-
-        // If a previous rotation is running, snap to its target first
-        if (rotationCoroutine != null)
-        {
-            StopCoroutine(rotationCoroutine);
-            // Snap to the new *correct* rotation so logic and visuals match
-            transform.rotation = targetRotation;
-        }
-
-
-        rotationCoroutine = StartCoroutine(
-            RotateTo(targetRotation, startedUpsideDown)
-        );
     }
 
     private Direction GetDirection(int dx, int dy)
@@ -347,45 +449,6 @@ public class PlayerController : Item
             return Direction.Left;
 
         return Direction.Up;
-    }
-
-    private IEnumerator RotateTo(Quaternion targetRotation, bool startedUpsideDown)
-    {
-        transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, targetRotation.eulerAngles.y, transform.rotation.eulerAngles.z);
-
-        Quaternion startRotation = transform.rotation;
-        float elapsed = 0f;
-
-        // Determine the primary axis of rotation in local space
-        // Since you only rotate around Y and Z, we can safely animate in Euler space
-        Vector3 startEuler = startRotation.eulerAngles;
-        Vector3 targetEuler = targetRotation.eulerAngles;
-
-        // Normalize angles to -180..180 for clean delta math
-        float deltaY = Mathf.DeltaAngle(startEuler.y, targetEuler.y);
-        float deltaZ = Mathf.DeltaAngle(startEuler.z, targetEuler.z);
-
-      
-        deltaY = -deltaY;
-        deltaZ = -deltaZ;
-        
-
-        while (elapsed < rotationDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / rotationDuration);
-
-            float currentY = startEuler.y + deltaY * t;
-            float currentZ = startEuler.z + deltaZ * t;
-
-            transform.rotation = Quaternion.Euler(0f, currentY, currentZ);
-
-            yield return null;
-        }
-
-        // Hard snap to the correct logical rotation at the end
-        transform.rotation = targetRotation;
-        rotationCoroutine = null;
     }
 
 
