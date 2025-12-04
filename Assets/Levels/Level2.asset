@@ -18,3 +18,27 @@ MonoBehaviour:
   - itemPrefab: {fileID: 4590949748391226555, guid: 85e23b4a14b58d845838b21311af06bf, type: 3}
     x: 0
     y: 0
+  - itemPrefab: {fileID: 9214700007602707899, guid: 28bbf8d22638d4940b7f3b8f7f55c57b, type: 3}
+    x: 2
+    y: 0
+  - itemPrefab: {fileID: 9214700007602707899, guid: 2e6eb9735b063c046bf1d67c6706d79a, type: 3}
+    x: 4
+    y: 0
+  - itemPrefab: {fileID: 584134196615349350, guid: a104285feea0335499b9a1fd3cf9fe4d, type: 3}
+    x: 1
+    y: 0
+  - itemPrefab: {fileID: 584134196615349350, guid: 6f7ae196b889bed4ba0043fc3810e0ca, type: 3}
+    x: 3
+    y: 0
+  - itemPrefab: {fileID: 1212297049299781429, guid: a3ebe05b01a8904478b10870f0db49fb, type: 3}
+    x: 6
+    y: 0
+  - itemPrefab: {fileID: 1212297049299781429, guid: a3ebe05b01a8904478b10870f0db49fb, type: 3}
+    x: 6
+    y: 0
+  - itemPrefab: {fileID: 1288422847248764091, guid: b1f5d8ca7ccc07e479389589758364b6, type: 3}
+    x: 6
+    y: 2
+  - itemPrefab: {fileID: 4278881301326165673, guid: 21246f90cae03b0488b2a1a5c15915aa, type: 3}
+    x: 6
+    y: 4

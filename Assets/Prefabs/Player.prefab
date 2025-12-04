@@ -104,6 +104,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   y: 0
+  teleportFallDistance: 1.2
+  teleportFallDuration: 0.18
+  teleportRiseHeight: 1.5
+  teleportRiseDuration: 0.25
   topPiece: {fileID: 2656476930711320436}
   bottomPiece: {fileID: 3641757577546147477}
   jumpDuration: 0.35
@@ -115,6 +119,7 @@ MonoBehaviour:
   isUpsideDown: 0
   moveSpeed: 5
   heightOffset: -0.15
+  heightOffsetIncrease: 0.05
   invalidFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   flashDuration: 0.12
   recoilDistance: 0.08

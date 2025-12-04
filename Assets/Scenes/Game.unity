@@ -451,7 +451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridManager: {fileID: 472432090}
   levels:
-  - {fileID: 11400000, guid: 275b849f0e71f794a858dc4f63e123b8, type: 2}
+  - {fileID: 11400000, guid: 1a0e47e5ed555f74b80cc2030a671978, type: 2}
   - {fileID: 11400000, guid: 0607bfe874fd8f148b31941496c9a48a, type: 2}
   topSizeText: {fileID: 1624975119}
   bottomSizeText: {fileID: 627504606}
@@ -620,8 +620,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4293646981
-  m_fontColor: {r: 0.52156866, g: 0.854902, b: 0.9215687, a: 1}
+    rgba: 4285941597
+  m_fontColor: {r: 0.3647059, g: 0.2784314, b: 0.46274513, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -873,7 +873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.52156866, g: 0.854902, b: 0.9215687, a: 1}
+  m_Color: {r: 0.3647059, g: 0.2784314, b: 0.46274513, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1132,6 +1132,12 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 933a1ca8ce1c04645837df5c3a83a541, type: 3}
   - name: error
     clip: {fileID: 8300000, guid: 55c12a0ce6f709a4da4a4a1845d20e59, type: 3}
+  - name: teleport
+    clip: {fileID: 8300000, guid: 8e788e64e268e734582a108abd1f4440, type: 3}
+  - name: button
+    clip: {fileID: 8300000, guid: cfc42c44417ff724bb68754423388139, type: 3}
+  - name: stuck
+    clip: {fileID: 8300000, guid: f4da2d26ca1f95f428f901ea44341f75, type: 3}
 --- !u!1 &1624975117
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,8 +1204,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4293646981
-  m_fontColor: {r: 0.52156866, g: 0.854902, b: 0.9215687, a: 1}
+    rgba: 4285941597
+  m_fontColor: {r: 0.3647059, g: 0.2784314, b: 0.46274513, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1479,9 +1485,10 @@ GameObject:
   - component: {fileID: 1969372709}
   - component: {fileID: 1969372708}
   - component: {fileID: 1969372707}
+  - component: {fileID: 1969372710}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1560,6 +1567,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 291867111}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1969372710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969372706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 103b6271321be5d47bf6cf9406aa9aea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseShakeStrength: 0.001
+  baseShakeDuration: 0.005
+  sizeShakeMultiplier: 0.001
+  jumpMultiplier: 20
 --- !u!1 &2094160120
 GameObject:
   m_ObjectHideFlags: 0

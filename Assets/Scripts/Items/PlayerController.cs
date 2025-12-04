@@ -4,10 +4,21 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using static Button;
 
 public class PlayerController : Item
 {
     enum Direction { Up, Down, Left, Right };
+
+    [Header("Teleporter")]
+    [SerializeField] float teleportFallDistance = 1.2f;
+    [SerializeField] float teleportFallDuration = 0.18f;
+    [SerializeField] float teleportRiseHeight = 1.5f;
+    [SerializeField] float teleportRiseDuration = 0.25f;
+
+    private bool arrivedByTeleport = false;
+    private Coroutine teleportCoroutine;
+
 
     [Header("Player Pieces")]
     [SerializeField] GameObject topPiece;
@@ -39,7 +50,7 @@ public class PlayerController : Item
     [Header("Movement")]
     public float moveSpeed = 5f;
     public float heightOffset = 0.6f;
-
+    public float heightOffsetIncrease = 0.05f;
     [Header("Invalid Orientation Feedback")]
     public Color invalidFlashColor = new Color(1f, 0.3f, 0.3f, 1f);
     [SerializeField] float flashDuration = 0.12f;
@@ -50,6 +61,7 @@ public class PlayerController : Item
 
     GameManager gameManager;
     private bool isMoving = false;
+    private bool isTeleporting = false;
     private Vector3 targetPosition;
     private GridManager gridManager;
 
@@ -58,10 +70,14 @@ public class PlayerController : Item
     private Coroutine movementCoroutine;
     private Coroutine feedbackCoroutine;
 
+    private CameraShake cameraShake;
+
     private void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
         gameManager.UpdateSizeText(topSize, bottomSize);
+
+        cameraShake = Camera.main.GetComponent<CameraShake>();
     }
 
     private void Update()
@@ -71,7 +87,10 @@ public class PlayerController : Item
             MoveToTarget();
             return;
         }
-
+        if(isTeleporting)
+        {
+            return;
+        }
         if (moveInput != Vector2.zero)
         {
             ProcessMoveInput();
@@ -236,6 +255,29 @@ public class PlayerController : Item
             }
         }
 
+        // 4. Teleporter
+        foreach (Item item in targetItems)
+        {
+            if (item is Teleporter teleporter && teleporter.active)
+            {
+                ExecuteMove(newX, newY);
+                HandleTeleporter(teleporter);
+                return;
+            }
+        }
+
+        // 5. Button
+        foreach (Item item in targetItems)
+        {
+            ExecuteMove(newX, newY);
+            if (item is Button button && button.active)
+            {
+                
+                HandleButton(button);
+                return;
+            }
+        }
+
         // 4. Empty tile is already filtered earlier
 
         // 5. No blocking item → normal move
@@ -245,11 +287,166 @@ public class PlayerController : Item
             return;
         }
     }
+    private void HandleButton(Button button)
+    {
+        if (!button.active)
+            return;
+
+        int minSize = Mathf.Min(topSize, bottomSize);
+
+        if (minSize < button.size)
+        {
+            button.FailedPress();
+            return;
+        }
+
+
+        // ✅ ACTIVATE BUTTON EFFECT
+        switch (button.type)
+        {
+            case ButtonType.DeactivateBlocks:
+                foreach (Item item in gridManager.items)
+                {
+                    if (item is Block block)
+                    {
+                        block.Deactivate();
+                    }
+                }
+                break;
+
+            case ButtonType.ActivateTeleporters:
+                foreach (Item item in gridManager.items)
+                {
+                    if (item is Teleporter teleporter)
+                    {
+                        teleporter.active = true;
+                    }
+                }
+                break;
+        }
+
+        button.Pressed();
+        FindFirstObjectByType<SFXManager>().PlayClip("button");
+    }
+
+    private void HandleTeleporter(Teleporter source)
+    {
+        // Prevent infinite teleport loops
+        if (arrivedByTeleport)
+        {
+            arrivedByTeleport = false;
+            return;
+        }
+
+        if (teleportCoroutine != null)
+            StopCoroutine(teleportCoroutine);
+
+        teleportCoroutine = StartCoroutine(TeleportRoutine(source));
+    }
+    private IEnumerator TeleportRoutine(Teleporter source)
+    {
+        FindFirstObjectByType<SFXManager>().PlayClip("teleport");
+
+        // Wait until normal move finishes
+        while (isMoving)
+            yield return null;
+        isTeleporting = true;
+        Teleporter target = FindClosestOtherTeleporter(source);
+
+        if (target == null)
+        {
+            Debug.LogError("TELEPORTER ERROR: No other active teleporter found!");
+            yield break;
+        }
+
+        arrivedByTeleport = true;
+
+        // ======================
+        // FALL INTO PORTAL
+        // ======================
+        Vector3 fallStart = transform.position;
+        Vector3 fallEnd = fallStart + Vector3.down * teleportFallDistance;
+
+        float t = 0f;
+        while (t < teleportFallDuration)
+        {
+            t += Time.deltaTime;
+            float lerp = t / teleportFallDuration;
+            transform.position = Vector3.Lerp(fallStart, fallEnd, lerp);
+            yield return null;
+        }
+
+        transform.position = fallEnd;
+
+        // ======================
+        // INSTANT RELOCATE (HIDDEN)
+        // ======================
+        x = target.x;
+        y = target.y;
+
+        Vector3 targetBasePos =
+            gridManager.GridToWorld(x, y) + Vector3.up * heightOffset;
+
+        transform.position = targetBasePos + Vector3.down * teleportRiseHeight;
+
+        // ======================
+        // JUMP OUT OF PORTAL
+        // ======================
+        float jumpT = 0f;
+        Vector3 riseStart = transform.position;
+        Vector3 riseEnd = targetBasePos;
+
+        while (jumpT < teleportRiseDuration)
+        {
+            jumpT += Time.deltaTime;
+            float lerp = jumpT / teleportRiseDuration;
+
+            float arc = 4f * teleportRiseHeight * lerp * (1f - lerp);
+            transform.position = Vector3.Lerp(riseStart, riseEnd, lerp) + Vector3.up * arc;
+
+            yield return null;
+        }
+
+        transform.position = riseEnd;
+        targetPosition = riseEnd;
+
+        arrivedByTeleport = false;
+        teleportCoroutine = null;
+        isTeleporting = false;
+
+    }
+    private Teleporter FindClosestOtherTeleporter(Teleporter source)
+    {
+        Teleporter closest = null;
+        float closestDist = float.MaxValue;
+
+        foreach (Item item in gridManager.items)
+        {
+            if (item is not Teleporter tp)
+                continue;
+
+            if (!tp.active || tp == source)
+                continue;
+
+            float dist =
+                Mathf.Abs(tp.x - source.x) +
+                Mathf.Abs(tp.y - source.y);
+
+            if (dist < closestDist)
+            {
+                closestDist = dist;
+                closest = tp;
+            }
+        }
+
+        return closest;
+    }
+
     private bool ContainsEmpty(List<Item> items)
     {
         foreach (Item item in items)
         {
-            if (item is Empty)
+            if (item is Empty || (item is Block block && block.active))
                 return true;
         }
 
@@ -276,7 +473,6 @@ public class PlayerController : Item
 
         bool isJump = Mathf.Abs(dx) > 1 || Mathf.Abs(dy) > 1;
 
-        // Stop any active movement coroutine
         if (movementCoroutine != null)
             StopCoroutine(movementCoroutine);
 
@@ -294,6 +490,7 @@ public class PlayerController : Item
         else
             FindFirstObjectByType<SFXManager>().PlayClip("step");
     }
+
     private IEnumerator MoveToTargetLinear()
     {
         while (Vector3.Distance(transform.position, targetPosition) > 0.001f)
@@ -309,6 +506,13 @@ public class PlayerController : Item
 
         transform.position = targetPosition;
         isMoving = false;
+
+        if (cameraShake != null)
+        {
+            int totalSize = topSize + bottomSize;
+            cameraShake.Shake(totalSize, false);
+        }
+
     }
 
     private IEnumerator JumpToTarget()
@@ -336,6 +540,13 @@ public class PlayerController : Item
 
         transform.position = end;
         isMoving = false;
+
+        if (cameraShake != null)
+        {
+            int totalSize = topSize + bottomSize;
+            cameraShake.Shake(totalSize, true);
+        }
+
     }
 
     private void Flip(int dx, int dy)
@@ -594,6 +805,7 @@ public class PlayerController : Item
             bottomSize = piece.size;
 
         }
+        heightOffset += heightOffsetIncrease;
         gameManager.UpdateSizeText(topSize, bottomSize);
         gridManager.RemoveItem(piece);
 
