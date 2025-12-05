@@ -258,7 +258,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -451,7 +451,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridManager: {fileID: 472432090}
   levels:
-  - {fileID: 11400000, guid: 9ee10a19a60da3449aa6dc510ef7c88a, type: 2}
   - {fileID: 11400000, guid: 1a0e47e5ed555f74b80cc2030a671978, type: 2}
   - {fileID: 11400000, guid: 0607bfe874fd8f148b31941496c9a48a, type: 2}
   - {fileID: 11400000, guid: eba279ecdfa22464e8e1c232a7cc19e0, type: 2}

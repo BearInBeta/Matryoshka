@@ -40,14 +40,12 @@ public class GridManager : MonoBehaviour
             return;
 
         float dominant = Mathf.Max(width, height);
-        float submissive = Mathf.Min(width, height);
-        float ratio = submissive / dominant;
         float ortho = dominant / 2f;
         mainCamera.orthographicSize = ortho;
 
 
-        float pivotX = 0;
-        float pivotZ = 0;
+        float pivotX =  ((float) width - 1f)/2f;
+        float pivotZ = ((float) height - 1f) / 2f;
         float pivotY = 0.01399994f;
         cameraPivot.position = new Vector3(pivotX, pivotY, pivotZ);
     }
