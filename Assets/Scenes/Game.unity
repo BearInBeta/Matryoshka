@@ -219,7 +219,7 @@ Transform:
   m_GameObject: {fileID: 291867110}
   serializedVersion: 2
   m_LocalRotation: {x: 0.27781588, y: 0.36497167, z: -0.1150751, w: 0.8811196}
-  m_LocalPosition: {x: 0, y: 3.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -451,8 +451,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridManager: {fileID: 472432090}
   levels:
+  - {fileID: 11400000, guid: 9ee10a19a60da3449aa6dc510ef7c88a, type: 2}
   - {fileID: 11400000, guid: 1a0e47e5ed555f74b80cc2030a671978, type: 2}
   - {fileID: 11400000, guid: 0607bfe874fd8f148b31941496c9a48a, type: 2}
+  - {fileID: 11400000, guid: eba279ecdfa22464e8e1c232a7cc19e0, type: 2}
   topSizeText: {fileID: 1624975119}
   bottomSizeText: {fileID: 627504606}
 --- !u!114 &472432094

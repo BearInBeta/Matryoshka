@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71dbd9c5df6a31745aa5e453173647d4, type: 3}
+  m_Name: Level 1
+  m_EditorClassIdentifier: 
+  width: 2
+  height: 5
+  setUpItems:
+  - itemPrefab: {fileID: 4590949748391226555, guid: 85e23b4a14b58d845838b21311af06bf, type: 3}
+    x: 0
+    y: 0
+  - itemPrefab: {fileID: 1212297049299781429, guid: 99bc45eafe6bdb64e8565c6c8f4f6137, type: 3}
+    x: 0
+    y: 4
+  levelName: First Steps

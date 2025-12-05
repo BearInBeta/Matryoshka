@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
     }
     public void LoadLevel(int level)
     {
-        LoadLevel(levels[level]);
+        LoadLevel(levels[level % levels.Count]);
     }
     private void LoadLevel(LevelData level)
     {

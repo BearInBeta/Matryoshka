@@ -28,13 +28,12 @@ public class WinningGate : Item
     IEnumerator TeleportPlayer(GameObject playerObject)
     {
         FindFirstObjectByType<SFXManager>().PlayClip("win");
-        GameObject particle = Instantiate(teleportEffect,transform.position, Quaternion.identity);
+        Instantiate(teleportEffect,transform.position, Quaternion.identity);
         Destroy(playerObject);
 
         yield return new WaitForSeconds(waitTime);
 
-        Destroy(particle);
-
+   
         GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().NextLevel();
         yield return null;
     }
