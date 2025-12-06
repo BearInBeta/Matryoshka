@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using TMPro;
 
 public class GridManager : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] float tileRiseDuration = 0.3f;
     [SerializeField] float columnDelay = 0.08f;
     [SerializeField] AnimationCurve riseCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-
+    [SerializeField] float yScale = 10;
     [Header("Camera Framing")]
     public Transform cameraPivot;
     public Camera mainCamera;
@@ -151,13 +152,14 @@ public class GridManager : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 Vector3 worldPos =
-                    GridToWorld(x, y, -0.5f * tilePrefab.transform.localScale.y);
+                    GridToWorld(x, y, -0.5f * yScale);
 
                 GameObject tile = Instantiate(tilePrefab, worldPos, Quaternion.identity);
                 tile.name = $"Tile ({x},{y})";
                 tile.transform.parent = this.transform;
 
                 grid[x, y] = tile;
+                tile.GetComponentInChildren<TMP_Text>().text = x + "," + y;
             }
         }
     }

@@ -9,10 +9,11 @@ public class GameManager : MonoBehaviour
     public List<LevelData> levels;
     private LevelData currentLevel;
     public TMP_Text topSizeText, bottomSizeText;
-
+    public int startAt = 0;
+    [SerializeField] TMP_Text levelName;
     void Start()
     {
-        LoadLevel(0);
+        LoadLevel(startAt - 1);
     }
     void Update()
     {
@@ -75,6 +76,7 @@ public class GameManager : MonoBehaviour
     private void LoadLevel(LevelData level)
     {
         currentLevel = level;
+        levelName.text = (levels.IndexOf(level) + 1) + ": " + level.levelName;
         gridManager.LoadLevel(level);
     }
 

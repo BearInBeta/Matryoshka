@@ -15,9 +15,9 @@ public class Launcher : Item
         else if (dy == 0 && dx < 0)   // Down
             return downDistance;
         else if (dy > 0 && dx == 0)   // Right
-            return rightDistance;
-        else if (dy < 0 && dx == 0)   // Left
             return leftDistance;
+        else if (dy < 0 && dx == 0)   // Left
+            return rightDistance;
 
         return 1;
     }

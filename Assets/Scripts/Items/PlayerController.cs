@@ -680,10 +680,10 @@ public class PlayerController : Item
             }
             return;
         }
-           
-   
-        AttachPiece(piece);
+
         ExecuteMove(newX, newY);
+        StartCoroutine(AttachPiece(piece));
+        
     }
 
     public void PlayInvalidOrientationFeedback(GameObject dollPieceObj, GameObject playerPieceObj)
@@ -784,8 +784,12 @@ public class PlayerController : Item
         }
     }
     
-    private void AttachPiece(DollPiece piece)
+    private IEnumerator AttachPiece(DollPiece piece)
     {
+        while(isMoving)
+        {
+            yield return null;
+        }
         Vector3 localOffset;
 
         if (piece.type == DollPieceType.Top)
