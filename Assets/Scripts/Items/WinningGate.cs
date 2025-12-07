@@ -14,10 +14,10 @@ public class WinningGate : Item
         if(GetComponentInChildren<TextMeshPro>() != null)
         GetComponentInChildren<TextMeshPro>().text = requiredSize + "";
     }
-    public bool TryWin(int playerTopSize, int playerBottomSize, bool isUpsideDown, GameObject playerObject)
+    public bool TryWin(int playerTopSize, int playerBottomSize, GameObject playerObject)
     {
         if (playerTopSize == requiredSize &&
-            playerBottomSize == requiredSize && !isUpsideDown)
+            playerBottomSize == requiredSize)
         {
             StartCoroutine(TeleportPlayer(playerObject));
             return true;

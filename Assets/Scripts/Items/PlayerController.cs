@@ -8,7 +8,6 @@ using static Button;
 
 public class PlayerController : Item
 {
-    enum Direction { Up, Down, Left, Right };
 
     [Header("Teleporter")]
     [SerializeField] float teleportFallDistance = 1.2f;
@@ -192,8 +191,8 @@ public class PlayerController : Item
         {
             case Direction.Up: extraX = distance; break;
             case Direction.Down: extraX = -distance; break;
-            case Direction.Right: extraY = distance; break;
-            case Direction.Left: extraY = -distance; break;
+            case Direction.Right: extraY = -distance; break;
+            case Direction.Left: extraY = distance; break;
         }
 
         int newX = x + moveX + extraX;
@@ -203,7 +202,7 @@ public class PlayerController : Item
         // ✅ SKIP EMPTY / OUT OF BOUNDS
         // ============================
 
-        while ((!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY)))
+        while ((!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY), GetDirection(moveX, moveY)) || ContainsEmpty(gridManager.GetItemsAt(x, y), GetDirection(moveX, moveY)))
                && (extraX != 0 || extraY != 0))
         {
             if (extraX != 0)
@@ -216,7 +215,7 @@ public class PlayerController : Item
             newY = y + moveY + extraY;
         }
 
-        if (!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY)))
+        if (!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY), GetDirection(moveX, moveY)) || ContainsEmpty(gridManager.GetItemsAt(x, y), GetDirection(moveX, moveY)))
             return;
 
         // ============================
@@ -300,29 +299,16 @@ public class PlayerController : Item
             return;
         }
 
-
-        // ✅ ACTIVATE BUTTON EFFECT
-        switch (button.type)
+        foreach (Item item in gridManager.items)
         {
-            case ButtonType.DeactivateBlocks:
-                foreach (Item item in gridManager.items)
-                {
-                    if (item is Block block)
-                    {
-                        block.Deactivate();
-                    }
-                }
-                break;
-
-            case ButtonType.ActivateTeleporters:
-                foreach (Item item in gridManager.items)
-                {
-                    if (item is Teleporter teleporter)
-                    {
-                        teleporter.active = true;
-                    }
-                }
-                break;
+            
+            if (item is Block block && block.id == button.id)
+            {
+                block.Deactivate();
+            }else if (item is Teleporter teleporter && teleporter.id == button.id)
+            {
+                teleporter.active = true;
+            }
         }
 
         button.Pressed();
@@ -442,12 +428,18 @@ public class PlayerController : Item
         return closest;
     }
 
-    private bool ContainsEmpty(List<Item> items)
+    private bool ContainsEmpty(List<Item> items, Direction direction)
     {
         foreach (Item item in items)
         {
-            if (item is Empty || (item is Block block && block.active))
+            if (item is Empty || (item is Block block && block.GetActive(direction, x, y, Mathf.Max(topSize, bottomSize))))
+            {
+                if(item is not Empty)
+                    PlayInvalidOrientationFeedback(item.gameObject.GetComponentInChildren<MeshRenderer>().gameObject, topPiece, false);
+
                 return true;
+            }
+                
         }
 
         return false;
@@ -565,8 +557,8 @@ public class PlayerController : Item
         {
             case Direction.Up: yRotation = 0f; break;
             case Direction.Down: yRotation = 180f; break;
-            case Direction.Right: yRotation = -90f; break;
-            case Direction.Left: yRotation = 90f; break;
+            case Direction.Right: yRotation = 90f; break;
+            case Direction.Left: yRotation = -90f; break;
 
         }
 
@@ -686,23 +678,26 @@ public class PlayerController : Item
         
     }
 
-    public void PlayInvalidOrientationFeedback(GameObject dollPieceObj, GameObject playerPieceObj)
+    public void PlayInvalidOrientationFeedback(GameObject dollPieceObj, GameObject playerPieceObj, bool flash = true)
     {
         if (feedbackCoroutine != null)
             StopCoroutine(feedbackCoroutine);
 
         feedbackCoroutine = StartCoroutine(
-            InvalidOrientationRoutine(dollPieceObj, playerPieceObj)
+            InvalidOrientationRoutine(dollPieceObj, playerPieceObj, flash)
         );
 
         FindFirstObjectByType<SFXManager>().PlayClip("error");
     }
-    private IEnumerator InvalidOrientationRoutine(GameObject dollPieceObj, GameObject playerPieceObj)
+    private IEnumerator InvalidOrientationRoutine(GameObject dollPieceObj, GameObject playerPieceObj, bool flash)
     {
         // Start both flashes in parallel
-        Coroutine flash1 = StartCoroutine(FlashObject(dollPieceObj));
-        Coroutine flash2 = StartCoroutine(FlashObject(playerPieceObj));
-
+        Coroutine flash1 = null;
+        Coroutine flash2 = null;
+        if (flash) {
+            flash1 = StartCoroutine(FlashObject(dollPieceObj));
+            flash2 = StartCoroutine(FlashObject(playerPieceObj));
+        }
         // Start recoil at the same time
         yield return StartCoroutine(RecoilFromTarget(dollPieceObj.transform));
 
@@ -776,7 +771,7 @@ public class PlayerController : Item
         {
             yield return new WaitForEndOfFrame();
         }
-        bool win = gate.TryWin(topSize, bottomSize, isUpsideDown, gameObject);
+        bool win = gate.TryWin(topSize, bottomSize, gameObject);
         if(!win)
         {
             PlayInvalidOrientationFeedback(gate.gameObject, bottomPiece);
@@ -827,9 +822,9 @@ public class PlayerController : Item
         else if (dy == 0 && dx < 0)   // Down
             return Direction.Down;
         else if (dy > 0 && dx == 0)   // Right
-            return Direction.Right;
-        else if (dy < 0 && dx == 0)   // Left
             return Direction.Left;
+        else if (dy < 0 && dx == 0)   // Left
+            return Direction.Right;
 
         return Direction.Up;
     }

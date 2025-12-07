@@ -3,16 +3,12 @@ using System.Collections;
 
 public class Button : Item
 {
-    public enum ButtonType
-    {
-        DeactivateBlocks,
-        ActivateTeleporters
-    }
+
 
     [Header("Button State")]
     public bool active = true;
-    public ButtonType type;
     public int size = 1;
+    public int id = 0;
 
     [Header("Button Visual")]
     public Transform button;

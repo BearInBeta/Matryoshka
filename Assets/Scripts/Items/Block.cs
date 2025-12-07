@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Block : Item
 {
+ 
+
     [Header("Block State")]
     public bool active = true;
 
@@ -11,9 +13,27 @@ public class Block : Item
     [SerializeField] float sinkDuration = 0.25f;
     [SerializeField] AnimationCurve sinkCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
     [SerializeField] Transform spikes;
-
+    public Direction blockSide = Direction.Left;
+    public int maxSize = 1;
+    public int id = 0;
     private bool isAnimating = false;
 
+    public bool GetActive(Direction direction, int x, int y, int size)
+    {
+        if (size > maxSize || active)
+        {
+            if (direction == blockSide && this.x == x && this.y == y)
+            {
+                return true;
+            }
+
+            if ((direction == Direction.Up && blockSide == Direction.Down || direction == Direction.Down && blockSide == Direction.Up || direction == Direction.Left && blockSide == Direction.Right || direction == Direction.Right && blockSide == Direction.Left) && (this.x != x || this.y != y))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     public void Deactivate()
     {
         if (!active || isAnimating)
