@@ -101,7 +101,7 @@ public class PlayerController : Item
     {
         gridManager = FindFirstObjectByType<GridManager>();
 
-        Vector3 startWorldPos = gridManager.GridToWorld(x, y) + Vector3.up * heightOffset * 2;
+        Vector3 startWorldPos = gridManager.GridToWorld(x, y) + Vector3.up * heightOffset;
 
         transform.position = startWorldPos;
         targetPosition = startWorldPos;
@@ -807,8 +807,9 @@ public class PlayerController : Item
         heightOffset += heightOffsetIncrease;
         gameManager.UpdateSizeText(topSize, bottomSize);
         gridManager.RemoveItem(piece);
-
         piece.AttachTo(transform, localOffset);
+        transform.position = gridManager.GridToWorld(x, y) + Vector3.up * heightOffset;
+
         FindFirstObjectByType<SFXManager>().PlayClip("attach");
 
 

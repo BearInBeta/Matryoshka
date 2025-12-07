@@ -118,8 +118,8 @@ MonoBehaviour:
   bottomSize: 1
   isUpsideDown: 0
   moveSpeed: 5
-  heightOffset: -0.15
-  heightOffsetIncrease: 0.05
+  heightOffset: -0.25
+  heightOffsetIncrease: 0.1
   invalidFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
   flashDuration: 0.12
   recoilDistance: 0.08
@@ -201,6 +201,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 96188070-202e-4426-ab0b-0fd680e337c0
     m_ActionName: 'Testing/Next[/Keyboard/t]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ea8a846e-d3fa-4988-8a8c-b06b7211f929
+    m_ActionName: UI/New action
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay

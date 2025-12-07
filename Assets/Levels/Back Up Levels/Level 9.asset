@@ -24,10 +24,10 @@ MonoBehaviour:
   - itemPrefab: {fileID: 4278881301326165673, guid: 45d6c6fc700611d4f87025892627e56b, type: 3}
     x: 3
     y: 2
-  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
+  - itemPrefab: {fileID: 4278881301326165673, guid: c79ea81db62f15444b3a8a746423b199, type: 3}
     x: 3
     y: 1
-  - itemPrefab: {fileID: 4278881301326165673, guid: 7224c9b27b0095b4782e1fd62b450911, type: 3}
+  - itemPrefab: {fileID: 4278881301326165673, guid: 2c75673271bd63d4c96bb747dd8eacec, type: 3}
     x: 4
     y: 0
   - itemPrefab: {fileID: 9214700007602707899, guid: 28bbf8d22638d4940b7f3b8f7f55c57b, type: 3}
@@ -36,4 +36,10 @@ MonoBehaviour:
   - itemPrefab: {fileID: 584134196615349350, guid: a104285feea0335499b9a1fd3cf9fe4d, type: 3}
     x: 3
     y: 4
+  - itemPrefab: {fileID: 584134196615349350, guid: 6f7ae196b889bed4ba0043fc3810e0ca, type: 3}
+    x: 1
+    y: 4
+  - itemPrefab: {fileID: 9214700007602707899, guid: 2e6eb9735b063c046bf1d67c6706d79a, type: 3}
+    x: 0
+    y: 0
   levelName: Going Thrice
