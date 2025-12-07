@@ -530,7 +530,7 @@ public class PlayerController : Item
             yield return null;
         }
 
-        transform.position = end;
+        transform.position = gridManager.GridToWorld(x, y) + Vector3.up * heightOffset;
         isMoving = false;
 
         if (cameraShake != null)
@@ -680,14 +680,23 @@ public class PlayerController : Item
 
     public void PlayInvalidOrientationFeedback(GameObject dollPieceObj, GameObject playerPieceObj, bool flash = true)
     {
-        if (feedbackCoroutine != null)
-            StopCoroutine(feedbackCoroutine);
+        StartCoroutine(
+                        InvalidOrientationFeedbackWait(dollPieceObj, playerPieceObj, flash)
+                    );
 
-        feedbackCoroutine = StartCoroutine(
-            InvalidOrientationRoutine(dollPieceObj, playerPieceObj, flash)
-        );
 
+    }
+
+    private IEnumerator InvalidOrientationFeedbackWait(GameObject dollPieceObj, GameObject playerPieceObj, bool flash)
+    {
+        while (feedbackCoroutine != null)
+        {
+            yield return null;
+        }
+        
+        feedbackCoroutine = StartCoroutine(InvalidOrientationRoutine(dollPieceObj, playerPieceObj, flash));
         FindFirstObjectByType<SFXManager>().PlayClip("error");
+
     }
     private IEnumerator InvalidOrientationRoutine(GameObject dollPieceObj, GameObject playerPieceObj, bool flash)
     {
@@ -781,7 +790,9 @@ public class PlayerController : Item
     
     private IEnumerator AttachPiece(DollPiece piece)
     {
-        while(isMoving)
+        heightOffset += heightOffsetIncrease;
+
+        while (isMoving)
         {
             yield return null;
         }
@@ -804,7 +815,6 @@ public class PlayerController : Item
             bottomSize = piece.size;
 
         }
-        heightOffset += heightOffsetIncrease;
         gameManager.UpdateSizeText(topSize, bottomSize);
         gridManager.RemoveItem(piece);
         piece.AttachTo(transform, localOffset);

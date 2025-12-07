@@ -16,8 +16,8 @@ MonoBehaviour:
   height: 3
   setUpItems:
   - itemPrefab: {fileID: 4590949748391226555, guid: 85e23b4a14b58d845838b21311af06bf, type: 3}
-    x: 2
-    y: 2
+    x: 1
+    y: 0
   - itemPrefab: {fileID: 1212297049299781429, guid: 99bc45eafe6bdb64e8565c6c8f4f6137, type: 3}
     x: 0
     y: 1
@@ -27,10 +27,4 @@ MonoBehaviour:
   - itemPrefab: {fileID: 6528339407175856985, guid: ced612e1b9e2933468c1d6e34bf561d1, type: 3}
     x: 0
     y: 0
-  - itemPrefab: {fileID: 1288422847248764091, guid: 4f39c956c77b2ec429239558d8af8956, type: 3}
-    x: 1
-    y: 0
-  - itemPrefab: {fileID: 4278881301326165673, guid: 21246f90cae03b0488b2a1a5c15915aa, type: 3}
-    x: 0
-    y: 1
   levelName: Move it around
