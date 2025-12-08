@@ -22,6 +22,8 @@ public class Block : Item
     {
         if (size > maxSize || active)
         {
+            if(Mathf.Abs(this.x - x) <= 1 && Mathf.Abs(this.y - y) <= 1)
+            {
             if (direction == blockSide && this.x == x && this.y == y)
             {
                 return true;
@@ -30,6 +32,8 @@ public class Block : Item
             if ((direction == Direction.Up && blockSide == Direction.Down || direction == Direction.Down && blockSide == Direction.Up || direction == Direction.Left && blockSide == Direction.Right || direction == Direction.Right && blockSide == Direction.Left) && (this.x != x || this.y != y))
             {
                 return true;
+            }
+
             }
         }
         return false;
