@@ -15,7 +15,7 @@ public class GridManager : MonoBehaviour
     public Transform cameraPivot;
     public Camera mainCamera;
     public float cameraPadding = 1f;
-
+    public float orthoFactor = 0.8f;
     [Header("Grid Data")]
     public int width = 7;
     public int height = 7;
@@ -26,24 +26,40 @@ public class GridManager : MonoBehaviour
 
     private GameObject[,] grid;
 
-    // ✅ RUNTIME ITEMS (actual instances)
     public List<Item> items = new List<Item>();
 
     private GameObject playerGameObject;
+    private int lastWidth;
+    private int lastHeight;
 
-    // ===============================
-    // ✅ CAMERA
-    // ===============================
+    void Start()
+    {
+        lastWidth = Screen.width;
+        lastHeight = Screen.height;
+    }
+
+    void Update()
+    {
+        if (Screen.width != lastWidth || Screen.height != lastHeight)
+        {
+            lastWidth = Screen.width;
+            lastHeight = Screen.height;
+
+            CenterCameraOnGrid(); // <-- your method
+        }
+    }
 
     void CenterCameraOnGrid()
     {
         if (mainCamera == null || cameraPivot == null)
             return;
 
-        float dominant = Mathf.Max(width, height);
-        float ortho = dominant / 2f;
-        mainCamera.orthographicSize = ortho;
+        float aspect = (float)Screen.width / Screen.height;
 
+        float neededVertical = orthoFactor * (height / aspect);
+        float neededHorizontal = orthoFactor * (width /aspect);
+
+        mainCamera.orthographicSize = Mathf.Max(neededVertical, neededHorizontal);
 
         float pivotX =  ((float) width - 1f)/2f;
         float pivotZ = ((float) height - 1f) / 2f;
