@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.03529412, g: 0.027450982, b: 0.023529414, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -453,7 +453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridManager: {fileID: 472432090}
   levels:
-  - {fileID: 11400000, guid: 0607bfe874fd8f148b31941496c9a48a, type: 2}
+  - {fileID: 11400000, guid: 1a0e47e5ed555f74b80cc2030a671978, type: 2}
   - {fileID: 11400000, guid: eba279ecdfa22464e8e1c232a7cc19e0, type: 2}
   - {fileID: 11400000, guid: a0a92a2a45f2a2943bc0aa6c3c2f72a1, type: 2}
   - {fileID: 11400000, guid: e83eeae705fbb83499a4864148b937a9, type: 2}
@@ -478,7 +478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d5ce95b9fed0542be0f48e75869861, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  themeData: {fileID: 11400000, guid: 9636bb843e49c354c8cd969a5fb2d40b, type: 2}
+  themeData: {fileID: 11400000, guid: add92b7d337c27a4fbb3b8dcc75ba905, type: 2}
   maincam: {fileID: 1969372708}
   themeMusicSource: {fileID: 372815997}
   symbol: {fileID: 1318925625}
@@ -635,8 +635,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4285941597
-  m_fontColor: {r: 0.3647059, g: 0.2784314, b: 0.46274513, a: 1}
+    rgba: 4280297587
+  m_fontColor: {r: 0.45098042, g: 0.15686275, b: 0.1254902, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -889,7 +889,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3647059, g: 0.2784314, b: 0.46274513, a: 1}
+  m_Color: {r: 0.45098042, g: 0.15686275, b: 0.1254902, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1059,8 +1059,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4285941597
-  m_fontColor: {r: 0.3647059, g: 0.2784314, b: 0.46274513, a: 1}
+    rgba: 4280297587
+  m_fontColor: {r: 0.45098042, g: 0.15686275, b: 0.1254902, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1356,8 +1356,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4285941597
-  m_fontColor: {r: 0.3647059, g: 0.2784314, b: 0.46274513, a: 1}
+    rgba: 4280297587
+  m_fontColor: {r: 0.45098042, g: 0.15686275, b: 0.1254902, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1663,7 +1663,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19607845, g: 0.19215688, b: 0.23137257, a: 1}
+  m_BackGroundColor: {r: 0.16078432, g: 0.12941177, b: 0.10980393, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

@@ -32,7 +32,7 @@ Material:
   - _MK_WRAPPED_DIFFUSE
   - _RECEIVESHADOWS_ON
   - _WRAPPEDLIGHTING_ON
-  m_LightmapFlags: 2
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2450
@@ -254,7 +254,7 @@ Material:
     - _LightTransmissionIntensity: 1
     - _LightTransmissionSmoothness: 0.5
     - _LightTransmissionThresholdOffset: 0.25
-    - _Metallic: 0.746
+    - _Metallic: 1
     - _Mode: 1
     - _NormalMapIntensity: 1
     - _OcclusionMapIntensity: 1
@@ -280,7 +280,7 @@ Material:
     - _Roughness: 0.5
     - _Saturation: 1
     - _SketchMapScale: 1
-    - _Smoothness: 0
+    - _Smoothness: 0.555
     - _SmoothnessTextureChannel: 0
     - _Specular: 2
     - _SpecularHighlights: 1
@@ -308,7 +308,7 @@ Material:
     - _ZTest: 4
     - _ZWrite: 1
     m_Colors:
-    - _AlbedoColor: {r: 0.9921569, g: 0.9960785, b: 0.5372549, a: 1}
+    - _AlbedoColor: {r: 0.654902, g: 0.24313727, b: 0.17254902, a: 1}
     - _Color: {r: 0.654902, g: 0.24313724, b: 0.17254898, a: 1}
     - _DetailColor: {r: 1, g: 1, b: 1, a: 1}
     - _DissolveBorderColor: {r: 1, g: 1, b: 1, a: 1}

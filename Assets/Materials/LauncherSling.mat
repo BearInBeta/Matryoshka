@@ -303,7 +303,7 @@ Material:
     - _Roughness: 0.5
     - _Saturation: 1
     - _SketchMapScale: 1
-    - _Smoothness: 0.291
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SoftParticlesEnabled: 0
     - _SoftParticlesFarFadeDistance: 1
@@ -334,7 +334,7 @@ Material:
     - _ZTest: 4
     - _ZWrite: 1
     m_Colors:
-    - _AlbedoColor: {r: 0.3647059, g: 0.7568628, b: 0.5647059, a: 1}
+    - _AlbedoColor: {r: 0.90196085, g: 0.58431375, b: 0.32156864, a: 1}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
     - _Color: {r: 0.90196085, g: 0.58431375, b: 0.3215686, a: 1}
     - _DetailColor: {r: 1, g: 1, b: 1, a: 1}
