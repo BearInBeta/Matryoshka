@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71dbd9c5df6a31745aa5e453173647d4, type: 3}
+  m_Name: Level 10
+  m_EditorClassIdentifier: 
+  width: 5
+  height: 3
+  setUpItems:
+  - itemPrefab: {fileID: 4590949748391226555, guid: 85e23b4a14b58d845838b21311af06bf, type: 3}
+    x: 0
+    y: 1
+  - itemPrefab: {fileID: 8793951698171551982, guid: f15e808f5ee36244181cb18cc4c8e888, type: 3}
+    x: 3
+    y: 0
+  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
+    x: 1
+    y: 0
+  - itemPrefab: {fileID: 4278881301326165673, guid: 45d6c6fc700611d4f87025892627e56b, type: 3}
+    x: 1
+    y: 1
+  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
+    x: 1
+    y: 2
+  - itemPrefab: {fileID: 1288422847248764091, guid: 4f39c956c77b2ec429239558d8af8956, type: 3}
+    x: 0
+    y: 2
+  - itemPrefab: {fileID: 584134196615349350, guid: a104285feea0335499b9a1fd3cf9fe4d, type: 3}
+    x: 3
+    y: 2
+  - itemPrefab: {fileID: 9214700007602707899, guid: 28bbf8d22638d4940b7f3b8f7f55c57b, type: 3}
+    x: 2
+    y: 2
+  - itemPrefab: {fileID: 1212297049299781429, guid: 1cd9f43d3fc46eb4185e3a1149ae5d6b, type: 3}
+    x: 0
+    y: 0
+  levelName: New Level
