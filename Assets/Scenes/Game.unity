@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 1118973545}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -453,7 +453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridManager: {fileID: 472432090}
   levels:
-  - {fileID: 11400000, guid: 1a0e47e5ed555f74b80cc2030a671978, type: 2}
+  - {fileID: 11400000, guid: 0607bfe874fd8f148b31941496c9a48a, type: 2}
   - {fileID: 11400000, guid: eba279ecdfa22464e8e1c232a7cc19e0, type: 2}
   - {fileID: 11400000, guid: a0a92a2a45f2a2943bc0aa6c3c2f72a1, type: 2}
   - {fileID: 11400000, guid: e83eeae705fbb83499a4864148b937a9, type: 2}
@@ -782,8 +782,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 0.735849, g: 0.58934057, b: 0, a: 1}
-  m_Intensity: 0.48
+  m_Color: {r: 1, g: 0.94374746, b: 0.7216981, a: 1}
+  m_Intensity: 2.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -793,8 +793,8 @@ Light:
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
-    m_Bias: 0.15
-    m_NormalBias: 0.4
+    m_Bias: 0.036
+    m_NormalBias: 0
     m_NearPlane: 0.1
     m_CullingMatrixOverride:
       e00: 1
@@ -815,7 +815,7 @@ Light:
       e33: 1
     m_UseCullingMatrixOverride: 0
   m_Cookie: {fileID: 0}
-  m_DrawHalo: 1
+  m_DrawHalo: 0
   m_Flare: {fileID: 0}
   m_RenderMode: 0
   m_CullingMask:
@@ -1573,7 +1573,7 @@ Light:
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 0.9386792, g: 1, b: 0.99494815, a: 1}
-  m_Intensity: 0.3
+  m_Intensity: 0.15
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1779,7 +1779,7 @@ Light:
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 0.8537736, g: 1, b: 0.9909201, a: 1}
-  m_Intensity: 0.4
+  m_Intensity: 0.2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

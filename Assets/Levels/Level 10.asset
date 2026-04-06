@@ -63,12 +63,6 @@ MonoBehaviour:
   - itemPrefab: {fileID: 584134196615349350, guid: 6f7ae196b889bed4ba0043fc3810e0ca, type: 3}
     x: 0
     y: 1
-  - itemPrefab: {fileID: 1288422847248764091, guid: 07544df55b38d644e8dcacd979367dd5, type: 3}
-    x: 0
-    y: 0
-  - itemPrefab: {fileID: 1288422847248764091, guid: 07544df55b38d644e8dcacd979367dd5, type: 3}
-    x: 0
-    y: 0
   - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
     x: 1
     y: 3
