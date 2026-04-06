@@ -27,7 +27,7 @@ Material:
   - _MK_WRAPPED_DIFFUSE
   - _RECEIVESHADOWS_ON
   - _WRAPPEDLIGHTING_ON
-  m_LightmapFlags: 0
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2000
@@ -272,7 +272,7 @@ Material:
     - _LightTransmissionThresholdOffset: 0.25
     - _LightingEnabled: 1
     - _MaxBrightness: 1.139
-    - _Metallic: 0.173
+    - _Metallic: 0.557
     - _Mode: 0
     - _NormalMapIntensity: 1
     - _OcclusionMapIntensity: 1
@@ -294,7 +294,7 @@ Material:
     - _RefractionDistortionFade: 0.5
     - _RefractionDistortionMapScale: 1
     - _RefractionTab: 0
-    - _RenderFace: 2
+    - _RenderFace: 0
     - _RenderPriority: 0
     - _Rim: 1
     - _RimPower: 3.43
@@ -302,10 +302,10 @@ Material:
     - _RimSmoothness: 0.5
     - _RimStrength: 1.37
     - _RimThresholdOffset: 0.25
-    - _Roughness: 0.218
+    - _Roughness: 0.392
     - _Saturation: 1
     - _SketchMapScale: 1
-    - _Smoothness: 0
+    - _Smoothness: 0.695
     - _SmoothnessTextureChannel: 0
     - _SoftParticlesEnabled: 0
     - _SoftParticlesFarFadeDistance: 1
@@ -336,9 +336,9 @@ Material:
     - _ZTest: 4
     - _ZWrite: 1
     m_Colors:
-    - _AlbedoColor: {r: 0.32156864, g: 0.09411766, b: 0.09411766, a: 1}
+    - _AlbedoColor: {r: 0.27450982, g: 0.23529413, b: 0.36862746, a: 1}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
-    - _Color: {r: 0.3215686, g: 0.094117604, b: 0.094117604, a: 1}
+    - _Color: {r: 0.2745098, g: 0.2352941, b: 0.36862743, a: 1}
     - _DetailColor: {r: 1, g: 1, b: 1, a: 1}
     - _DissolveBorderColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
@@ -352,7 +352,7 @@ Material:
     - _RimDarkColor: {r: 0, g: 0, b: 0, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _SpecularColor: {r: 0.20312497, g: 0.20312497, b: 0.20312497, a: 1}
+    - _SpecularColor: {r: 0.89433956, g: 0.89433956, b: 0.89433956, a: 1}
     - _VertexAnimationFrequency: {r: 2.5, g: 2.5, b: 2.5, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

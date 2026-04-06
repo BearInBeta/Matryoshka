@@ -66,4 +66,4 @@ MonoBehaviour:
   - itemPrefab: {fileID: 6528339407175856985, guid: ced612e1b9e2933468c1d6e34bf561d1, type: 3}
     x: 0
     y: 3
-  levelName: Going  Twice
+  levelName: Going Twice

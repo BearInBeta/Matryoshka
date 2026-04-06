@@ -2,7 +2,7 @@ Shader "Custom/SoftLightBeam"
 {
     Properties
     {
-        _BeamColor ("Beam Color", Color) = (1,1,0.6,1)
+        _Color ("Color", Color) = (1,1,0.6,1)
         _Intensity ("Intensity", Float) = 4.0
         _RadiusSoftness ("Edge Softness", Float) = 2.0
         _HeightFade ("Height Fade", Float) = 1.5
@@ -35,7 +35,7 @@ Shader "Custom/SoftLightBeam"
                 float3 localPos : TEXCOORD0;
             };
 
-            float4 _BeamColor;
+            float4 _Color;
             float _Intensity;
             float _RadiusSoftness;
             float _HeightFade;
@@ -71,7 +71,7 @@ Shader "Custom/SoftLightBeam"
                 float brightness = (edgeFade * verticalFade) + core * 0.5;
                 brightness *= _Intensity;
 
-                float4 col = _BeamColor * brightness;
+                float4 col = _Color * brightness;
                 col.a = brightness;       // let bloom handle most of it
 
                 return col;
