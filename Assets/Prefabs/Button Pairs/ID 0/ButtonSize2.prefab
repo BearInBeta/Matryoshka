@@ -153,11 +153,12 @@ MonoBehaviour:
   x: 0
   y: 0
   active: 1
-  type: 0
   size: 2
+  id: 0
   button: {fileID: 8292107943530158655}
   pressedHeight: -0.94
   unpressedHeight: -0.9
+  failedPressDuration: 0.08
 --- !u!1 &6844905827914074155
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,7 +224,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e822f69c7b100ae4d8273e9af1e210ec, type: 2}
+  - {fileID: 2100000, guid: b3384a2dd754c854faed70bac58093f7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

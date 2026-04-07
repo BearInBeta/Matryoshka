@@ -234,15 +234,7 @@ public class PlayerController : Item
             }
         }
 
-        // 2. Launcher
-        foreach (Item item in targetItems)
-        {
-            if (item is Launcher)
-            {
-                ExecuteMove(newX, newY);
-                return;
-            }
-        }
+       
 
         // 3. Winning Gate
         foreach (Item item in targetItems)
@@ -414,6 +406,10 @@ public class PlayerController : Item
             if (!tp.active || tp == source)
                 continue;
 
+            if(tp.id != source.id)
+            {
+                continue;
+            }
             float dist =
                 Mathf.Abs(tp.x - source.x) +
                 Mathf.Abs(tp.y - source.y);

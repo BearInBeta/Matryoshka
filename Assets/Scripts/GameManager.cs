@@ -11,9 +11,13 @@ public class GameManager : MonoBehaviour
     public TMP_Text topSizeText, bottomSizeText;
     public int startAt = 0;
     [SerializeField] TMP_Text levelName;
+    [SerializeField] LevelData testLevel;
     void Start()
     {
-        LoadLevel(startAt - 1);
+        if(testLevel == null)
+            LoadLevel(startAt - 1);
+        else
+            LoadLevel(testLevel);
     }
     void Update()
     {
