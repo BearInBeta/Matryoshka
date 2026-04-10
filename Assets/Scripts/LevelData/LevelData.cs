@@ -12,6 +12,8 @@ public class LevelData : ScriptableObject
     [Header("Level Items")]
     public List<ItemSetup> setUpItems = new List<ItemSetup>();
 
-    [Header("Level Items")]
+    [Header("Level Data")]
     public string levelName = "New Level";
+    public int minTime;
+    public int minSteps;
 }

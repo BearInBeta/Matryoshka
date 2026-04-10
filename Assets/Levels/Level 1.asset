@@ -28,3 +28,5 @@ MonoBehaviour:
     x: 0
     y: 0
   levelName: Move it around
+  minTime: 3
+  minSteps: 6

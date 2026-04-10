@@ -349,79 +349,11 @@
             ]
         },
         {
-            "name": "Testing",
-            "id": "84ebeabf-a8ac-48c1-9949-cfe42a3fc5af",
-            "actions": [
-                {
-                    "name": "Reset",
-                    "type": "Button",
-                    "id": "bbeb9a7a-e39a-453b-b64b-64274039f183",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "Press",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Previous",
-                    "type": "Button",
-                    "id": "33e17a40-9d6e-4ed0-8115-3ab205184afb",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "Press",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Next",
-                    "type": "Button",
-                    "id": "96188070-202e-4426-ab0b-0fd680e337c0",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "Press",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "861cdd20-f102-4e83-91fb-e742dd06719b",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Reset",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6d4b605b-df5e-4957-ac31-ef05feb61858",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Previous",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c16227e8-07d8-4d9e-bfd4-f3883cfec480",
-                    "path": "<Keyboard>/t",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Next",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
             "name": "UI",
             "id": "93648bf9-db9b-4d3d-a249-0be717dd80db",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Pause",
                     "type": "Button",
                     "id": "ea8a846e-d3fa-4988-8a8c-b06b7211f929",
                     "expectedControlType": "",
@@ -434,11 +366,22 @@
                 {
                     "name": "",
                     "id": "455bfde9-9785-4de3-b40f-af5926aef7fb",
-                    "path": "",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "729f90ad-b405-4c9b-b690-01c1ca7360ae",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

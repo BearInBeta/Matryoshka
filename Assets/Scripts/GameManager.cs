@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,10 +15,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text levelName;
     [SerializeField] LevelData testLevel;
     [SerializeField] GameObject passScreen,pauseScreen;
+    [SerializeField] private LevelPassedPanelAnimator passedAnimator;
 
+    public bool paused = false;
     bool passed = false;
     float levelTimer = 0f;
     bool timerRunning = false;
+    int steps = 0;
 
     void Start()
     {
@@ -37,10 +42,13 @@ public class GameManager : MonoBehaviour
 
     public void PassLevel()
     {
-        passScreen.SetActive(true);
-        passed = true;
+        paused = true;
         timerRunning = false;
-        UpdateTimeText();
+        foreach (ButtonWobble pbw in passScreen.GetComponentsInChildren<ButtonWobble>())
+        {
+            pbw.hovering = false;
+        }
+        passedAnimator.Play(currentLevel, levelTimer, steps);
     }
 
     public void UpdateSizeText(int topSize, int bottomSize)
@@ -51,36 +59,23 @@ public class GameManager : MonoBehaviour
 
     public void UpdateStepText(int steps)
     {
-        stepText.text = steps + "";
+        this.steps = steps;
+        if (steps <= 999)
+            stepText.text = steps + "";
+        else
+            stepText.text = 999 + "+";
     }
 
     void UpdateTimeText()
     {
-        int minutes = Mathf.FloorToInt(levelTimer / 60f);
-        int seconds = Mathf.FloorToInt(levelTimer % 60f);
+        int seconds = Mathf.FloorToInt(levelTimer);
 
-        timeText.text = $"{minutes:00}:{seconds:00}";
+        timeText.text = $"{seconds:00}";
     }
-
-    // Called by PlayerInput → Testing → Reset UnityEvent
-    public void OnReset(InputAction.CallbackContext context)
+    public void OnPause(InputAction.CallbackContext ctx)
     {
-        if (!context.performed) return;
-        ResetLevel();
-    }
-
-    // Called by PlayerInput → Testing → Next UnityEvent
-    public void OnNext(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        NextLevel();
-    }
-
-    // Called by PlayerInput → Testing → Previous UnityEvent
-    public void OnPrevious(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        PreviousLevel();
+        if (!ctx.performed) return;
+        TogglePause();
     }
 
     public void PreviousLevel()
@@ -114,6 +109,8 @@ public class GameManager : MonoBehaviour
 
     private void LoadLevel(LevelData level)
     {
+        steps = 0;
+        paused = false;
         Time.timeScale = 1;
         pauseScreen.SetActive(false);
         passScreen.SetActive(false);
@@ -143,7 +140,26 @@ public class GameManager : MonoBehaviour
     }
     public void TogglePause()
     {
-        pauseScreen.SetActive(!pauseScreen.activeInHierarchy);
-        Time.timeScale = Mathf.Abs(Time.timeScale - 1);
+
+        paused = !paused;
+        if (paused)
+        {
+            FindFirstObjectByType<SFXManager>().PlayClip("pause");
+            Time.timeScale = 0f;
+            pauseScreen.SetActive(true);
+            pauseScreen.GetComponent<PauseMenuAnimator>().Show();
+        }
+        else
+        {
+            FindFirstObjectByType<SFXManager>().PlayClip("unpause");
+            Time.timeScale = 1f;
+            foreach (ButtonWobble pbw in pauseScreen.GetComponentsInChildren<ButtonWobble>())
+            {
+                pbw.hovering = false;
+            }
+            pauseScreen.GetComponent<PauseMenuAnimator>().Hide();
+            
+        }
+
     }
 }

@@ -93,8 +93,12 @@ public class PlayerController : Item
         }
         if (moveInput != Vector2.zero)
         {
-            ProcessMoveInput();
-            moveInput = Vector2.zero; // consume input (1 tile per press)
+            if (!gameManager.paused)
+            {
+                ProcessMoveInput();
+                moveInput = Vector2.zero; // consume input (1 tile per press)
+            }
+
         }
     }
 
@@ -111,7 +115,7 @@ public class PlayerController : Item
     public void OnMove(InputAction.CallbackContext ctx)
     {
 
-        if (ctx.performed)
+        if (ctx.performed && !gameManager.paused)
         {
             moveInput = ctx.ReadValue<Vector2>();
         }

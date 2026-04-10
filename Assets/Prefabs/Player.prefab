@@ -191,18 +191,6 @@ MonoBehaviour:
     m_ActionName: 'Gameplay/Move[/XInputControllerWindows/dpad/up,/XInputControllerWindows/dpad/down,/XInputControllerWindows/dpad/left,/XInputControllerWindows/dpad/right,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]'
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: bbeb9a7a-e39a-453b-b64b-64274039f183
-    m_ActionName: 'Testing/Reset[/Keyboard/r]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 33e17a40-9d6e-4ed0-8115-3ab205184afb
-    m_ActionName: 'Testing/Previous[/Keyboard/e]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 96188070-202e-4426-ab0b-0fd680e337c0
-    m_ActionName: 'Testing/Next[/Keyboard/t]'
-  - m_PersistentCalls:
-      m_Calls: []
     m_ActionId: ea8a846e-d3fa-4988-8a8c-b06b7211f929
     m_ActionName: UI/New action
   m_NeverAutoSwitchControlSchemes: 0
