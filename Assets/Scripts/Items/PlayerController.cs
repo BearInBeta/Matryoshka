@@ -799,7 +799,11 @@ public class PlayerController : Item
         if(!win)
         {
             PlayInvalidOrientationFeedback(gate.gameObject, bottomPiece);
-            
+
+        }
+        else
+        {
+            gameManager.PassLevel();
         }
     }
     

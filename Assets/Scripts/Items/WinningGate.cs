@@ -7,7 +7,6 @@ public class WinningGate : Item
     [Header("Win Condition")]
     public int requiredSize;
     [SerializeField] GameObject teleportEffect;
-    [SerializeField] float waitTime = 0.5f;
 
     private void Start()
     {
@@ -31,10 +30,7 @@ public class WinningGate : Item
         Instantiate(teleportEffect,transform.position, Quaternion.identity);
         Destroy(playerObject);
 
-        yield return new WaitForSeconds(waitTime);
-
-   
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().NextLevel();
         yield return null;
-    }
+
+     }
 }
