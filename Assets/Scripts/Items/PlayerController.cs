@@ -71,11 +71,12 @@ public class PlayerController : Item
 
     private CameraShake cameraShake;
 
+    private int steps = 0;
     private void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
         gameManager.UpdateSizeText(topSize, bottomSize);
-
+        gameManager.UpdateStepText(steps);
         cameraShake = Camera.main.GetComponent<CameraShake>();
     }
 
@@ -101,7 +102,7 @@ public class PlayerController : Item
     {
         gridManager = FindFirstObjectByType<GridManager>();
 
-        Vector3 startWorldPos = gridManager.GridToWorld(x, y) + Vector3.up * heightOffset;
+        Vector3 startWorldPos = gridManager.GridToWorld(x, y) + Vector3.up * heightOffsetCalculator();
 
         transform.position = startWorldPos;
         targetPosition = startWorldPos;
@@ -363,7 +364,7 @@ public class PlayerController : Item
         y = target.y;
 
         Vector3 targetBasePos =
-            gridManager.GridToWorld(x, y) + Vector3.up * heightOffset;
+            gridManager.GridToWorld(x, y) + Vector3.up * heightOffsetCalculator();
 
         transform.position = targetBasePos + Vector3.down * teleportRiseHeight;
 
@@ -450,6 +451,8 @@ public class PlayerController : Item
     }
     private void ExecuteMove(int newX, int newY)
     {
+        steps++;
+        gameManager.UpdateStepText(steps);
         int dx = newX - x;
         int dy = newY - y;
 
@@ -457,7 +460,7 @@ public class PlayerController : Item
         y = newY;
 
         targetPosition =
-            gridManager.GridToWorld(x, y) + Vector3.up * heightOffset;
+            gridManager.GridToWorld(x, y) + Vector3.up * heightOffsetCalculator();
 
         bool isJump = Mathf.Abs(dx) > 1 || Mathf.Abs(dy) > 1;
 
@@ -477,6 +480,9 @@ public class PlayerController : Item
             FindFirstObjectByType<SFXManager>().PlayClip("jump");
         else
             FindFirstObjectByType<SFXManager>().PlayClip("step");
+
+  
+
     }
 
     private IEnumerator MoveToTargetLinear()
@@ -526,7 +532,7 @@ public class PlayerController : Item
             yield return null;
         }
 
-        transform.position = gridManager.GridToWorld(x, y) + Vector3.up * heightOffset;
+        transform.position = end;
         isMoving = false;
 
         if (cameraShake != null)
@@ -669,6 +675,19 @@ public class PlayerController : Item
             return;
         }
 
+        if (piece.type == DollPieceType.Top)
+        {
+            // Stack upward from the top half
+            topSize = piece.size;
+
+        }
+        else // Bottom
+        {
+            // Stack downward from the bottom half
+
+            bottomSize = piece.size;
+
+        }
         ExecuteMove(newX, newY);
         StartCoroutine(AttachPiece(piece));
         
@@ -786,7 +805,7 @@ public class PlayerController : Item
     
     private IEnumerator AttachPiece(DollPiece piece)
     {
-        heightOffset += heightOffsetIncrease;
+        
 
         while (isMoving)
         {
@@ -798,8 +817,7 @@ public class PlayerController : Item
         {
             // Stack upward from the top half
             topPiece = piece.gameObject.GetComponentInChildren<MeshRenderer>().gameObject;
-            localOffset = Vector3.up * (topSize * 0.4f);
-            topSize = piece.size;
+            localOffset = Vector3.up * ((topSize - 1) * 0.4f);
 
         }
         else // Bottom
@@ -807,14 +825,13 @@ public class PlayerController : Item
             // Stack downward from the bottom half
             bottomPiece = piece.gameObject.GetComponentInChildren<MeshRenderer>().gameObject;
 
-            localOffset = Vector3.down * (bottomSize * 0.4f);
-            bottomSize = piece.size;
+            localOffset = Vector3.down * ((bottomSize - 1) * 0.4f);
 
         }
+
         gameManager.UpdateSizeText(topSize, bottomSize);
         gridManager.RemoveItem(piece);
         piece.AttachTo(transform, localOffset);
-        transform.position = gridManager.GridToWorld(x, y) + Vector3.up * heightOffset;
 
         FindFirstObjectByType<SFXManager>().PlayClip("attach");
 
@@ -836,7 +853,21 @@ public class PlayerController : Item
         return Direction.Up;
     }
 
+    private float heightOffsetCalculator()
+    {
+        float offset = heightOffset + DirectionalSize() * heightOffsetIncrease;
+        return offset;
+    }
 
+    private int DirectionalSize()
+    {
+        if(topSize < bottomSize && isUpsideDown || topSize > bottomSize && !isUpsideDown)
+        {
+            return topSize;
+        }
+        return bottomSize;
+
+    }
 
 
 

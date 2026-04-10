@@ -10,7 +10,7 @@ public class ThemeData : ScriptableObject
         public Material material;
         public Color color = Color.white;
     }
-    public Color backgroundColor, stacheColor, textColor, flashColor;
+    public Color backgroundColor, stacheColor, textColor, flashColor, symbolColor;
     public AudioClip themeMusic;
     public List<MaterialColorPair> materialColors = new List<MaterialColorPair>();
 

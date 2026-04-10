@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public GridManager gridManager;
     public List<LevelData> levels;
     private LevelData currentLevel;
-    public TMP_Text topSizeText, bottomSizeText;
+    public TMP_Text topSizeText, bottomSizeText, stepText, timeText;
     public int startAt = 0;
     [SerializeField] TMP_Text levelName;
     [SerializeField] LevelData testLevel;
@@ -29,6 +29,10 @@ public class GameManager : MonoBehaviour
         topSizeText.text = topSize + "";
         bottomSizeText.text = bottomSize + "";
 
+    }
+    public void UpdateStepText(int steps)
+    {
+        stepText.text = steps + "";
     }
     // Called by PlayerInput → Testing → Reset UnityEvent
     public void OnReset(InputAction.CallbackContext context)
@@ -80,7 +84,7 @@ public class GameManager : MonoBehaviour
     private void LoadLevel(LevelData level)
     {
         currentLevel = level;
-        levelName.text = (levels.IndexOf(level) + 1) + ": " + level.levelName;
+        levelName.text = "Level " + (levels.IndexOf(level) + 1) + " - " + level.levelName;
         gridManager.LoadLevel(level);
     }
 

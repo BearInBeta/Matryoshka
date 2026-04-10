@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9bc2a66dbbe674afda86ee6cb99e9a6b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 335088
+  packageName: Liquid Glass & Blur UI Shader - Mobile/Desktop
+  packageVersion: 1.1.4
+  assetPath: Assets/Lith/Liquid Glass/Scripts/Editor/PipelineDefineSetter.cs
+  uploadId: 889292

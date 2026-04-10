@@ -15,7 +15,7 @@ public class ThemeApplier : MonoBehaviour
     public ThemeData themeData;
     [SerializeField] Camera maincam;
     [SerializeField] AudioSource themeMusicSource;
-    [SerializeField] Image symbol, moustache;
+    [SerializeField] Image symbol, moustache, separator;
     [ContextMenu("Apply Colors To Materials")]
     public void ApplyColors()
     {
@@ -37,8 +37,9 @@ public class ThemeApplier : MonoBehaviour
             pcc.invalidFlashColor = themeData.flashColor;
         }
 
-        symbol.color = themeData.textColor;
+        symbol.color = themeData.symbolColor;
         moustache.color = themeData.stacheColor;
+        separator.color = themeData.stacheColor;
         themeMusicSource.clip = themeData.themeMusic;
         maincam.backgroundColor = themeData.backgroundColor;
         foreach (var pair in themeData.materialColors)

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bbeac5567e3da4a838726c6629e4823b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 335088
+  packageName: Liquid Glass & Blur UI Shader - Mobile/Desktop
+  packageVersion: 1.1.4
+  assetPath: Assets/Lith/Liquid Glass/Demo/Materials/bg blur video.mat
+  uploadId: 889292

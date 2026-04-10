@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Disco
   m_EditorClassIdentifier: 
   backgroundColor: {r: 0.19607845, g: 0.19215688, b: 0.23137257, a: 1}
-  stacheColor: {r: 1, g: 1, b: 1, a: 1}
-  textColor: {r: 0.3647059, g: 0.2784314, b: 0.46274513, a: 1}
+  stacheColor: {r: 0.9490196, g: 0.9529412, b: 0.96862745, a: 1}
+  textColor: {r: 0.9490196, g: 0.9529412, b: 0.96862745, a: 0.7372549}
   flashColor: {r: 0.9921569, g: 0.9960785, b: 0.5372549, a: 1}
+  symbolColor: {r: 0.3647059, g: 0.2784314, b: 0.46274513, a: 0.7607843}
   themeMusic: {fileID: 8300000, guid: 44ad68dd958e87048b7e47f7537f00aa, type: 3}
   materialColors:
   - material: {fileID: 2100000, guid: 362bf93965e932840908d75b4d7a471b, type: 2}

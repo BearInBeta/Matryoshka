@@ -1,0 +1,8 @@
+fileFormatVersion: 2
+guid: 315a4630d214700418d150d90e8be7cf
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: '{"mode":2,"width":100,"height":80,"normalScaleFactor":1.0,"intensity":32.0,"invertX":false,"invertY":false,"sourceSprite":{"instanceID":59448},"blurPx":6.449999809265137,"edgeWidthPx":32.0,"edgeCurve":4.0,"cornerRadiusPx":12.0,"enableTop":true,"enableBottom":true,"enableLeft":true,"enableRight":true,"maskScaleFactor":1.0,"maskMode":1,"maskTextureType":1,"hardThreshold":0.0,"maskGamma":10.0,"invertMask":false,"createOutline":false,"outlineThicknessPx":1.0,"lastSaveDir":"Assets/Materials/UI/Glass_textures","lastSaveName":"Glass","bakeAuto":true}'
+  assetBundleName: 
+  assetBundleVariant: 

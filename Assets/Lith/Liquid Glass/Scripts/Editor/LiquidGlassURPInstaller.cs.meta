@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: fa3b3f02b4f2845648446714ea7c2ddc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 335088
+  packageName: Liquid Glass & Blur UI Shader - Mobile/Desktop
+  packageVersion: 1.1.4
+  assetPath: Assets/Lith/Liquid Glass/Scripts/Editor/LiquidGlassURPInstaller.cs
+  uploadId: 889292
