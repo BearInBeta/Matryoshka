@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Profiling;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,11 +10,14 @@ public class GameManager : MonoBehaviour
     public List<LevelData> levels;
     private LevelData currentLevel;
     public TMP_Text topSizeText, bottomSizeText, stepText, timeText;
-    public int startAt = 0;
+    public int startAt = 1;
     [SerializeField] TMP_Text levelName;
     [SerializeField] LevelData testLevel;
     [SerializeField] GameObject passScreen,pauseScreen;
     [SerializeField] private LevelPassedPanelAnimator passedAnimator;
+
+    [Header("Save/Profile")]
+    [SerializeField] private int activeProfileId = -1;
 
     public bool paused = false;
     float levelTimer = 0f;
@@ -24,6 +26,14 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log(Application.persistentDataPath);
+        activeProfileId = GameSaveSystem.GetActiveProfileId();
+        if(activeProfileId == -1)
+        {
+            activeProfileId = 0;
+            CreateProfile("Test Profile");
+            SetActiveProfile(activeProfileId);
+        }
         if (testLevel == null)
             LoadLevel(startAt - 1);
         else
@@ -43,6 +53,10 @@ public class GameManager : MonoBehaviour
     {
         paused = true;
         timerRunning = false;
+        int levelIndex = levels.IndexOf(currentLevel);
+        if (levelIndex >= 0)
+            GameSaveSystem.RecordLevelPassed(levelIndex, currentLevel, levelTimer, steps);
+
         foreach (ButtonWobble pbw in passScreen.GetComponentsInChildren<ButtonWobble>())
         {
             pbw.hovering = false;
@@ -159,5 +173,45 @@ public class GameManager : MonoBehaviour
             
         }
 
+    }
+
+
+    // ---------- Profile methods ----------
+
+    public bool CreateProfile(string profileName)
+    {
+        int newId = GameSaveSystem.CreateProfile(profileName);
+        if (newId < 0)
+            return false;
+
+        activeProfileId = newId;
+        GameSaveSystem.SetActiveProfile(newId);
+        return true;
+    }
+
+    public bool DeleteProfile(int profileId)
+    {
+        bool deleted = GameSaveSystem.DeleteProfile(profileId);
+        activeProfileId = GameSaveSystem.GetActiveProfileId();
+        return deleted;
+    }
+
+    public bool SetActiveProfile(int profileId)
+    {
+        bool success = GameSaveSystem.SetActiveProfile(profileId);
+        if (success)
+            activeProfileId = profileId;
+
+        return success;
+    }
+
+    public List<SaveProfile> GetProfiles()
+    {
+        return GameSaveSystem.GetProfiles();
+    }
+
+    public int GetCurrentStars()
+    {
+        return GameSaveSystem.CalculateStars(currentLevel, levelTimer, steps);
     }
 }

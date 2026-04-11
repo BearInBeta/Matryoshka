@@ -156,10 +156,33 @@ public class PlayerController : Item
             if (delta.magnitude < minSwipeDistance)
                 return;
 
-            if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
-                moveInput = delta.x > 0 ? Vector2.right : Vector2.left;
-            else
-                moveInput = delta.y > 0 ? Vector2.up : Vector2.down;
+            float angle = Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg;
+
+            // Normalize angle to 0..360
+            if (angle < 0)
+                angle += 360f;
+
+            // Map both cardinal and diagonal swipes:
+            // E  / SE -> Right
+            // N  / NE -> Up
+            // W  / NW -> Left
+            // S  / SW -> Down
+            if (angle >= 337.5f || angle < 22.5f)           // East
+                moveInput = Vector2.right;
+            else if (angle >= 22.5f && angle < 67.5f)       // North-East
+                moveInput = Vector2.up;
+            else if (angle >= 67.5f && angle < 112.5f)      // North
+                moveInput = Vector2.up;
+            else if (angle >= 112.5f && angle < 157.5f)     // North-West
+                moveInput = Vector2.left;
+            else if (angle >= 157.5f && angle < 202.5f)     // West
+                moveInput = Vector2.left;
+            else if (angle >= 202.5f && angle < 247.5f)     // South-West
+                moveInput = Vector2.down;
+            else if (angle >= 247.5f && angle < 292.5f)     // South
+                moveInput = Vector2.down;
+            else                                            // South-East
+                moveInput = Vector2.right;
         }
     }
 
