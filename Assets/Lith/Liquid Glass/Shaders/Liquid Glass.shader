@@ -12,12 +12,10 @@ Shader "UI/Lith/Liquid Glass"
         _DistortionInnerPx  ("Distortion Inner (px)", Range(0, 256)) = 98
         _DistortionEdgePx   ("Distortion Edge  (px)", Range(0, 256)) = 80
         _ChromaticAmount    ("Chromatic", Range(0,1)) = 0.2
-        _GlobalBlurPercent   ("Global Blur Percent", Range(0,1)) = 0
+        _GlobalBlurPercent  ("Global Blur Percent", Range(0,1)) = 0
 
         _Saturation     ("Saturation", Range(0,10)) = 1.0
-
-        _TintIntensity ("Tint Intensity", Range(0,1)) = 0
-
+        _TintIntensity  ("Tint Intensity", Range(0,1)) = 0
         _GlossIntensity ("Gloss Intensity", Range(0,2)) = 0.6
         _GlossWidth     ("Gloss Width", Range(0.01,24)) = 1.2
 
@@ -71,7 +69,6 @@ Shader "UI/Lith/Liquid Glass"
             #include "UnityCG.cginc"
 #endif
 
-
 #if LLG_SRP
             #define UNITY_PROJ_COORD(a) (a)
 #endif
@@ -79,11 +76,12 @@ Shader "UI/Lith/Liquid Glass"
             struct appdata {
                 half4 vertex : POSITION;
                 half2 uv     : TEXCOORD0;
-                half4  color  : COLOR;
+                half4 color  : COLOR;
             };
+
             struct v2f {
-                half4 pos    : SV_POSITION;
-                half4 uvproj : TEXCOORD0;
+                float4 pos    : SV_POSITION;
+                float4 uvproj : TEXCOORD0;
                 half2  uv     : TEXCOORD1;
                 half4  col    : COLOR;
             };
@@ -93,21 +91,21 @@ Shader "UI/Lith/Liquid Glass"
     #if LLG_SRP
             TEXTURE2D(_ExternalTex);           SAMPLER(sampler_ExternalTex);
             TEXTURE2D(_ExternalBlurTex);       SAMPLER(sampler_ExternalBlurTex);
-            #define LLG_SAMPLE_PROJ(tex, prj) SAMPLE_TEXTURE2D(tex, sampler##tex, (prj).xy / max((prj).w, 1e-6))
+            #define LLG_SAMPLE_PROJ(tex, prj) SAMPLE_TEXTURE2D(tex, sampler##tex, ((UNITY_PROJ_COORD(prj)).xy / max((UNITY_PROJ_COORD(prj)).w, 1e-6)))
     #else
             sampler2D _ExternalTex;
             sampler2D _ExternalBlurTex;
-            #define LLG_SAMPLE_PROJ(tex, prj) tex2Dproj(tex, prj)
+            #define LLG_SAMPLE_PROJ(tex, prj) tex2Dproj(tex, UNITY_PROJ_COORD(prj))
     #endif
 #else
     #if LLG_SRP
             TEXTURE2D(_LithLiquidGlassExternalTex);     SAMPLER(sampler_LithLiquidGlassExternalTex);
             TEXTURE2D(_LithLiquidGlassExternalBlurTex); SAMPLER(sampler_LithLiquidGlassExternalBlurTex);
-            #define LLG_SAMPLE_PROJ(tex, prj) SAMPLE_TEXTURE2D(tex, sampler##tex, (prj).xy / max((prj).w, 1e-6))
+            #define LLG_SAMPLE_PROJ(tex, prj) SAMPLE_TEXTURE2D(tex, sampler##tex, ((UNITY_PROJ_COORD(prj)).xy / max((UNITY_PROJ_COORD(prj)).w, 1e-6)))
     #else
             sampler2D _LithLiquidGlassExternalTex;
             sampler2D _LithLiquidGlassExternalBlurTex;
-            #define LLG_SAMPLE_PROJ(tex, prj) tex2Dproj(tex, prj)
+            #define LLG_SAMPLE_PROJ(tex, prj) tex2Dproj(tex, UNITY_PROJ_COORD(prj))
     #endif
 #endif
 
@@ -146,8 +144,7 @@ Shader "UI/Lith/Liquid Glass"
                 o.uv  = v.uv;
                 o.col = v.color;
 
-                o.uvproj.xy = (o.pos.xy + o.pos.w) * 0.5;
-                o.uvproj.zw = o.pos.zw;
+                o.uvproj = ComputeScreenPos(o.pos);
                 return o;
             }
 
@@ -184,7 +181,6 @@ Shader "UI/Lith/Liquid Glass"
                 half scale = max(sizePx.x, sizePx.y);
                 half2 dist2EdNorm = dist2Ed * (scale / sizePx);
                 return min(dist2EdNorm.x, dist2EdNorm.y);
-
             }
 
             half EdgeFalloff(half dMinPx, half edgePx, half curve)
@@ -230,16 +226,15 @@ Shader "UI/Lith/Liquid Glass"
                 half ca     = _ChromaticAmount * edgeT;
                 half2 cab   = ofsUV * (ca * 1.5);
 
-                half4 proj = i.uvproj;
+                float4 proj = i.uvproj;
 
-                half4 prjG = proj; // green (nötr)
-                half4 prjR = proj; // red (+)
-                half4 prjB = proj; // blue (-)
-                prjR.xy += (ofsUV - cab) * prjR.w;
-                prjG.xy +=  ofsUV       * prjG.w;
-                prjB.xy += (ofsUV + cab) * prjB.w;
+                float4 prjG = proj; // green
+                float4 prjR = proj; // red (+)
+                float4 prjB = proj; // blue (-)
+                prjR.xy += (float2)(ofsUV - cab) * prjR.w;
+                prjG.xy += (float2) ofsUV        * prjG.w;
+                prjB.xy += (float2)(ofsUV + cab) * prjB.w;
 
-    // 3 örnekli doku okuma ve global blur karışımı
 #if defined(USE_TEXTURE_PROPERTY)
                 half3 sampG = lerp(
                     LLG_SAMPLE_PROJ(_ExternalTex,     prjG).rgb,
@@ -274,10 +269,9 @@ Shader "UI/Lith/Liquid Glass"
                 );
 #endif
 
-                // Kanalları 3 örnekten birleştir
                 half3 scene = half3(sampR.r, sampG.g, sampB.b);
 #else          
-                half4 proj = i.uvproj;
+                float4 proj = i.uvproj;
 #if defined(USE_TEXTURE_PROPERTY)
                 half3 scene = lerp(
                     LLG_SAMPLE_PROJ(_ExternalTex, proj).rgb,
