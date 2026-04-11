@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LevelPassedPanelAnimator passedAnimator;
 
     public bool paused = false;
-    bool passed = false;
     float levelTimer = 0f;
     bool timerRunning = false;
     int steps = 0;
@@ -115,7 +114,6 @@ public class GameManager : MonoBehaviour
         pauseScreen.SetActive(false);
         passScreen.SetActive(false);
         currentLevel = level;
-        passed = false;
 
         levelTimer = 0f;
         

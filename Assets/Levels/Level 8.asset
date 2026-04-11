@@ -64,3 +64,5 @@ MonoBehaviour:
     x: 4
     y: 3
   levelName: Which Way First
+  minTime: 8
+  minSteps: 27

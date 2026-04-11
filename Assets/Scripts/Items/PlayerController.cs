@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using static Button;
+using UnityEngine.EventSystems;
 
 public class PlayerController : Item
 {
@@ -50,6 +51,14 @@ public class PlayerController : Item
     public float moveSpeed = 5f;
     public float heightOffset = 0.6f;
     public float heightOffsetIncrease = 0.05f;
+
+    [Header("Mobile Swipe")]
+    [SerializeField] private bool enableSwipeInput = true;
+    [SerializeField] private float minSwipeDistance = 80f;
+
+    private Vector2 swipeStartPosition;
+    private bool swipeTracking = false;
+
     [Header("Invalid Orientation Feedback")]
     public Color invalidFlashColor = new Color(1f, 0.3f, 0.3f, 1f);
     [SerializeField] float flashDuration = 0.12f;
@@ -72,6 +81,10 @@ public class PlayerController : Item
     private CameraShake cameraShake;
 
     private int steps = 0;
+
+    private bool swipeStartedOverUI = false;
+    private int activeTouchId = -1;
+
     private void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
@@ -84,24 +97,79 @@ public class PlayerController : Item
     {
         if (isMoving)
         {
-            MoveToTarget();
             return;
         }
-        if(isTeleporting)
+
+        if (isTeleporting)
         {
             return;
+        }
+
+        if (!gameManager.paused)
+        {
+            DetectSwipeInput();
         }
         if (moveInput != Vector2.zero)
         {
             if (!gameManager.paused)
             {
                 ProcessMoveInput();
-                moveInput = Vector2.zero; // consume input (1 tile per press)
+                moveInput = Vector2.zero; // consume input (1 tile per input)
+            }
+        }
+    }
+    private void DetectSwipeInput()
+    {
+        if (!enableSwipeInput || gameManager.paused)
+            return;
+
+        if (Touchscreen.current == null)
+            return;
+
+        var touch = Touchscreen.current.primaryTouch;
+
+        if (touch.press.wasPressedThisFrame)
+        {
+            swipeStartPosition = touch.position.ReadValue();
+            swipeTracking = true;
+            activeTouchId = touch.touchId.ReadValue();
+            swipeStartedOverUI = IsTouchOverUI(activeTouchId);
+        }
+
+        if (swipeTracking && touch.press.wasReleasedThisFrame)
+        {
+            Vector2 swipeEndPosition = touch.position.ReadValue();
+            Vector2 delta = swipeEndPosition - swipeStartPosition;
+
+            swipeTracking = false;
+
+            if (swipeStartedOverUI)
+            {
+                swipeStartedOverUI = false;
+                activeTouchId = -1;
+                return;
             }
 
+            swipeStartedOverUI = false;
+            activeTouchId = -1;
+
+            if (delta.magnitude < minSwipeDistance)
+                return;
+
+            if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+                moveInput = delta.x > 0 ? Vector2.right : Vector2.left;
+            else
+                moveInput = delta.y > 0 ? Vector2.up : Vector2.down;
         }
     }
 
+    private bool IsTouchOverUI(int touchId)
+    {
+        if (EventSystem.current == null)
+            return false;
+
+        return EventSystem.current.IsPointerOverGameObject(touchId);
+    }
     public void StartPlayerPos()
     {
         gridManager = FindFirstObjectByType<GridManager>();

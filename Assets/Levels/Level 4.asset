@@ -37,3 +37,5 @@ MonoBehaviour:
     x: 1
     y: 1
   levelName: Pants Don't Go On Heads
+  minTime: 3
+  minSteps: 11

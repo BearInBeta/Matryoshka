@@ -67,3 +67,5 @@ MonoBehaviour:
     x: 1
     y: 3
   levelName: Back & Forth
+  minTime: 8
+  minSteps: 28

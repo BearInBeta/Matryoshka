@@ -43,3 +43,5 @@ MonoBehaviour:
     x: 0
     y: 0
   levelName: Buttons Up
+  minTime: 5
+  minSteps: 15

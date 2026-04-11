@@ -67,3 +67,5 @@ MonoBehaviour:
     x: 0
     y: 3
   levelName: Going Twice
+  minTime: 5
+  minSteps: 17
