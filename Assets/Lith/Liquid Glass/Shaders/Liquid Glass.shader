@@ -58,7 +58,7 @@ Shader "UI/Lith/Liquid Glass"
             #pragma fragment frag
             #pragma target 2.0
             #pragma fragmentoption ARB_precision_hint_fastest
-            #pragma multi_compile __ LLG_USE_URP
+            //#pragma multi_compile __ LLG_USE_URP
             #pragma multi_compile_local __ USE_TEXTURE_PROPERTY
             #pragma multi_compile_local __ USE_GLOSS
             #pragma multi_compile_local __ USE_SATURATION

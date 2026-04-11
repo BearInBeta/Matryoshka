@@ -16,7 +16,7 @@ Shader "Hidden/Lith/Blur"
             
             HLSLPROGRAM
 
-            #pragma multi_compile __ LLG_USE_URP            
+            //#pragma multi_compile __ LLG_USE_URP            
             #pragma vertex vert
             #pragma fragment fragHorizontal
 #if defined(LLG_USE_URP)
@@ -95,7 +95,7 @@ Shader "Hidden/Lith/Blur"
             
             HLSLPROGRAM
 
-            #pragma multi_compile __ LLG_USE_URP
+            //#pragma multi_compile __ LLG_USE_URP
             #pragma vertex vert
             #pragma fragment fragVertical
 #if defined(LLG_USE_URP)

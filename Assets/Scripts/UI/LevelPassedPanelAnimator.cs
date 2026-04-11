@@ -196,7 +196,6 @@ public class LevelPassedPanelAnimator : MonoBehaviour
 
                 buttonCanvasGroups[i].alpha = 0f;
                 buttonRoots[i].anchoredPosition = buttonBasePositions[i] + Vector2.down * buttonStartYOffset;
-                buttonRoots[i].localScale = Vector3.one * 0.9f;
             }
         }
     }
