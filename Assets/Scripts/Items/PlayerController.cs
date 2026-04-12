@@ -60,8 +60,13 @@ public class PlayerController : Item
     [Header("Invalid Orientation Feedback")]
     public Color invalidFlashColor = new Color(1f, 0.3f, 0.3f, 1f);
     [SerializeField] float flashDuration = 0.12f;
+    [SerializeField] float recoilDistance = 0.08f;
+    [SerializeField] float recoilDuration = 0.15f;
+    [SerializeField] AnimationCurve recoilCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-
+    [SerializeField] bool isMirrorHorizontal = false;
+    [SerializeField] bool isMirrorVertical = false;
+    public bool notMain = false;
     GameManager gameManager;
     private bool isMoving = false;
     private bool isTeleporting = false;
@@ -106,6 +111,7 @@ public class PlayerController : Item
         }
         if (moveInput != Vector2.zero)
         {
+            
             if (!gameManager.paused)
             {
                 ProcessMoveInput();
@@ -191,7 +197,6 @@ public class PlayerController : Item
     public void StartPlayerPos()
     {
         gridManager = FindFirstObjectByType<GridManager>();
-
         Vector3 startWorldPos = gridManager.GridToWorld(x, y) + Vector3.up * heightOffsetCalculator();
 
         transform.position = startWorldPos;
@@ -219,27 +224,26 @@ public class PlayerController : Item
         int moveY = 0;
 
         // Isometric mapping
-        if (moveInput.y > 0.1f)       // W / Up
+        if ((!isMirrorVertical && moveInput.y > 0.1f) || (isMirrorVertical && moveInput.y < -0.1f))       // W / Up
         {
             moveX = 1;
             moveY = 0;
         }
-        else if (moveInput.y < -0.1f) // S / Down
+        else if ((!isMirrorVertical && moveInput.y < -0.1f) || (isMirrorVertical && moveInput.y > 0.1f)) // S / Down
         {
             moveX = -1;
             moveY = 0;
         }
-        else if (moveInput.x < -0.1f) // A / Left
+        else if ((!isMirrorHorizontal && moveInput.x < -0.1f) || (isMirrorHorizontal && moveInput.x > 0.1f)) // A / Left
         {
             moveX = 0;
             moveY = 1;
         }
-        else if (moveInput.x > 0.1f)  // D / Right
+        else if ((!isMirrorHorizontal && moveInput.x > 0.1f) || (isMirrorHorizontal && moveInput.x < -0.1f))  // D / Right
         {
             moveX = 0;
             moveY = -1;
         }
-
         AttemptMove(moveX, moveY);
     }
 
@@ -519,8 +523,13 @@ public class PlayerController : Item
     {
         foreach (Item item in items)
         {
-            if (item is Empty || (item is Block block && block.GetActive(direction, x, y, Mathf.Max(topSize, bottomSize))))
+            if ((item is PlayerController && item != this) || item is Empty || (item is Block block && block.GetActive(direction, x, y, Mathf.Max(topSize, bottomSize))))
             {
+                StartCoroutine(RecoilFromTarget(item.transform));
+                if (!notMain)
+                {
+                    FindFirstObjectByType<SFXManager>().PlayClip("error");
+                }
                 return true;
             }
                 
@@ -765,7 +774,42 @@ public class PlayerController : Item
         StartCoroutine(AttachPiece(piece));
         
     }
+    private IEnumerator RecoilFromTarget(Transform target)
+    {
+        if (target == null)
+            yield break;
 
+        Vector3 startPos = transform.position;
+
+        // Direction toward the invalid piece (flattened vertically)
+        Vector3 dir = (target.position - startPos);
+        dir.y = 0f;
+        dir.Normalize();
+
+        Vector3 recoilTarget = startPos + dir * recoilDistance;
+
+        float elapsed = 0f;
+
+        while (elapsed < recoilDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / recoilDuration);
+            float eased = recoilCurve.Evaluate(t);
+
+            // Ping-pong style recoil (toward then back)
+            float pingPong = Mathf.Sin(t * Mathf.PI);
+
+            transform.position = Vector3.Lerp(
+                startPos,
+                recoilTarget,
+                pingPong * eased
+            );
+
+            yield return null;
+        }
+
+        transform.position = startPos;
+    }
     public void PlayInvalidOrientationFeedback(GameObject dollPieceObj, GameObject playerPieceObj, bool flash = true)
     {
         StartCoroutine(
@@ -829,6 +873,10 @@ public class PlayerController : Item
     }
     IEnumerator TryWin(WinningGate gate)
     {
+        if (notMain)
+        {
+            PlayInvalidOrientationFeedback(gate.gameObject, bottomPiece);
+        }
         while (isMoving)
         {
             yield return new WaitForEndOfFrame();

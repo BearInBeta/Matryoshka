@@ -27,9 +27,17 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        GameSaveSystem.SetActiveProfile(GameSession.ActiveProfileId);
-        activeProfileId = GameSaveSystem.GetActiveProfileId();
-        LoadLevel(GameSession.LevelToLoad);
+        if(testLevel != null)
+        {
+            LoadLevel(testLevel);
+        }
+        else
+        {
+            GameSaveSystem.SetActiveProfile(GameSession.ActiveProfileId);
+            activeProfileId = GameSaveSystem.GetActiveProfileId();
+            LoadLevel(GameSession.LevelToLoad);
+        }
+
     }
 
     void Update()

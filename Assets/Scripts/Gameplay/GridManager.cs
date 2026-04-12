@@ -28,12 +28,13 @@ public class GridManager : MonoBehaviour
 
     public List<Item> items = new List<Item>();
 
-    private GameObject playerGameObject;
+    private List<GameObject> playerGameObjects;
     private int lastWidth;
     private int lastHeight;
 
     void Start()
     {
+        playerGameObjects = new List<GameObject>();
         lastWidth = Screen.width;
         lastHeight = Screen.height;
     }
@@ -108,9 +109,22 @@ public class GridManager : MonoBehaviour
 
             yield return new WaitForSeconds(columnDelay);
         }
-        playerGameObject.GetComponent<PlayerController>().StartPlayerPos();
 
-        StartCoroutine(TeleportItemIn(playerGameObject));
+        foreach(GameObject playerGameObject in playerGameObjects)
+        {
+            playerGameObject.GetComponent<PlayerController>().StartPlayerPos();
+
+            if (playerGameObject.GetComponent<PlayerController>().notMain)
+            {
+                playerGameObject.SetActive(true);
+            }
+            else
+            {
+                StartCoroutine(TeleportItemIn(playerGameObject));
+            }
+
+        }
+        
     }
 
     void OffsetAllTilesAndItemsDown()
@@ -236,8 +250,13 @@ public class GridManager : MonoBehaviour
 
             if (instance is PlayerController)
             {
-                playerGameObject = instance.gameObject;
+                PlayerController possiblePlayer = (PlayerController)instance;
+                
+                playerGameObjects.Add(instance.gameObject);
+
                 instance.gameObject.SetActive(false);
+                
+                
             }
         }
     }
@@ -247,7 +266,6 @@ public class GridManager : MonoBehaviour
         FindFirstObjectByType<SFXManager>().PlayClip("start");
 
         gameObject.SetActive(true);
-        GetComponent<ThemeApplier>().ApplyColors();
 
         Instantiate(teleportEffect, gameObject.transform.position, Quaternion.identity);
         yield return null;
