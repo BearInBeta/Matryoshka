@@ -42,6 +42,7 @@ public class SFXManager : MonoBehaviour
 
     public void PlayClip(string name)
     {
+
         if (clipMap.TryGetValue(name, out AudioClip clip))
         {
             audioSource.PlayOneShot(clip);

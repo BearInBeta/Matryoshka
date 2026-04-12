@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
-using static Button;
 using UnityEngine.EventSystems;
 
 public class PlayerController : Item
@@ -63,9 +61,6 @@ public class PlayerController : Item
     public Color invalidFlashColor = new Color(1f, 0.3f, 0.3f, 1f);
     [SerializeField] float flashDuration = 0.12f;
 
-    [SerializeField] float recoilDistance = 0.08f;
-    [SerializeField] float recoilDuration = 0.15f;
-    [SerializeField] AnimationCurve recoilCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     GameManager gameManager;
     private bool isMoving = false;
@@ -357,7 +352,7 @@ public class PlayerController : Item
         foreach (Item item in targetItems)
         {
             ExecuteMove(newX, newY);
-            if (item is Button button && button.active)
+            if (item is PushButton button && button.active)
             {
                 
                 HandleButton(button);
@@ -374,7 +369,7 @@ public class PlayerController : Item
             return;
         }
     }
-    private void HandleButton(Button button)
+    private void HandleButton(PushButton button)
     {
         if (!button.active)
             return;
@@ -526,9 +521,6 @@ public class PlayerController : Item
         {
             if (item is Empty || (item is Block block && block.GetActive(direction, x, y, Mathf.Max(topSize, bottomSize))))
             {
-                if(item is not Empty)
-                    PlayInvalidOrientationFeedback(item.gameObject.GetComponentInChildren<MeshRenderer>().gameObject, topPiece, false);
-
                 return true;
             }
                 
@@ -677,20 +669,6 @@ public class PlayerController : Item
     }
 
 
-    private void MoveToTarget()
-    {
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            targetPosition,
-            moveSpeed * Time.deltaTime
-        );
-
-        if (Vector3.Distance(transform.position, targetPosition) < 0.001f)
-        {
-            transform.position = targetPosition;
-            isMoving = false;
-        }
-    }
 
 
 
@@ -818,7 +796,7 @@ public class PlayerController : Item
             flash2 = StartCoroutine(FlashObject(playerPieceObj));
         }
         // Start recoil at the same time
-        yield return StartCoroutine(RecoilFromTarget(dollPieceObj.transform));
+        //yield return StartCoroutine(RecoilFromTarget(dollPieceObj.transform));
 
         // Ensure flashes are fully finished
         if (flash1 != null) yield return flash1;
@@ -842,42 +820,7 @@ public class PlayerController : Item
         yield return new WaitForSeconds(flashDuration);
         mat.color = original;
     }
-    private IEnumerator RecoilFromTarget(Transform target)
-    {
-        if (target == null)
-            yield break;
 
-        Vector3 startPos = transform.position;
-
-        // Direction toward the invalid piece (flattened vertically)
-        Vector3 dir = (target.position - startPos);
-        dir.y = 0f;
-        dir.Normalize();
-
-        Vector3 recoilTarget = startPos + dir * recoilDistance;
-
-        float elapsed = 0f;
-
-        while (elapsed < recoilDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / recoilDuration);
-            float eased = recoilCurve.Evaluate(t);
-
-            // Ping-pong style recoil (toward then back)
-            float pingPong = Mathf.Sin(t * Mathf.PI);
-
-            transform.position = Vector3.Lerp(
-                startPos,
-                recoilTarget,
-                pingPong * eased
-            );
-
-            yield return null;
-        }
-
-        transform.position = startPos;
-    }
 
     private void HandleWinningGate(WinningGate gate, int newX, int newY)
     {

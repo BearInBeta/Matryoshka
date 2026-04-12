@@ -673,7 +673,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2156633010544428683}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4777175048234607688}
+        m_TargetAssemblyTypeName: LevelOption, Assembly-CSharp
+        m_MethodName: GoToLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7545163456787650611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -704,11 +716,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelNumber: {fileID: 3860628378077666868}
-  star1: {fileID: 39970524129297341}
-  star2: {fileID: 4631571300740939012}
-  star3: {fileID: 4865224410509406974}
-  stars: {fileID: 4437927430057429616}
+  star1: {fileID: 3901639335393205253}
+  star2: {fileID: 9080010468110446917}
+  star3: {fileID: 8818805346255296486}
+  stars: {fileID: 4681036811625069744}
   lockpad: {fileID: 5436445200814442699}
+  button: {fileID: 3445798695194897558}
 --- !u!1 &8417312561342343944
 GameObject:
   m_ObjectHideFlags: 0

@@ -50,8 +50,8 @@ MonoBehaviour:
   - material: {fileID: 2100000, guid: 45b6ca804a6087b40b59e72333989e48, type: 2}
     color: {r: 0.2901961, g: 0.7254902, b: 0.6392157, a: 1}
   - material: {fileID: 2100000, guid: 767c5651732492a42aa5c3c9c85e01be, type: 2}
-    color: {r: 0.29803923, g: 0.37647063, b: 0.6666667, a: 1}
-  - material: {fileID: 2100000, guid: 2a81fc8e1bedc9845b202a80e514c387, type: 2}
-    color: {r: 0.2901961, g: 0.7254902, b: 0.6392157, a: 1}
-  - material: {fileID: 2100000, guid: 2374d28dd13b03e46bf5d51ccb6a4307, type: 2}
     color: {r: 0.7568628, g: 0.06666667, b: 0.3529412, a: 1}
+  - material: {fileID: 2100000, guid: 2a81fc8e1bedc9845b202a80e514c387, type: 2}
+    color: {r: 0.29803923, g: 0.37647063, b: 0.6666667, a: 1}
+  - material: {fileID: 2100000, guid: 2374d28dd13b03e46bf5d51ccb6a4307, type: 2}
+    color: {r: 0.2901961, g: 0.7254902, b: 0.6392157, a: 1}

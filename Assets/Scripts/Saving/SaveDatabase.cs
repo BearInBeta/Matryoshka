@@ -103,7 +103,7 @@ public static class GameSaveSystem
         return Data.profiles.Find(p => p.profileId == profileId);
     }
 
-    public static int CreateProfile(string profileName)
+    public static int CreateProfile(string profileName, int newId)
     {
         if (Data.profiles.Count >= MaxProfiles)
         {
@@ -111,9 +111,12 @@ public static class GameSaveSystem
             return -1;
         }
 
-        int newId = 0;
-        while (HasProfile(newId))
-            newId++;
+        
+        if (HasProfile(newId))
+        {
+            Debug.LogWarning("Profile ID already in use.");
+            return -1;
+        }
 
         SaveProfile profile = new SaveProfile
         {
@@ -230,7 +233,7 @@ public static class GameSaveSystem
             File.Delete(SavePath);
     }
 
-    public static int GetFirstUnlockedUnpassedLevelIndex(int profileId, int totalLevelCount)
+    public static int GetNextLevel(int profileId, int totalLevelCount)
     {
         SaveProfile profile = GetProfile(profileId);
         if (profile == null)

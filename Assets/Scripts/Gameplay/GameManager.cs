@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Profiling;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,18 +27,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(Application.persistentDataPath);
+        GameSaveSystem.SetActiveProfile(GameSession.ActiveProfileId);
         activeProfileId = GameSaveSystem.GetActiveProfileId();
-        if(activeProfileId == -1)
-        {
-            activeProfileId = 0;
-            CreateProfile("Test Profile");
-            SetActiveProfile(activeProfileId);
-        }
-        if (testLevel == null)
-            LoadLevel(startAt - 1);
-        else
-            LoadLevel(testLevel);
+        LoadLevel(GameSession.LevelToLoad);
     }
 
     void Update()
@@ -175,19 +167,14 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void GoToMain()
+    {
+        SceneManager.LoadScene("Main");
+    }
 
     // ---------- Profile methods ----------
 
-    public bool CreateProfile(string profileName)
-    {
-        int newId = GameSaveSystem.CreateProfile(profileName);
-        if (newId < 0)
-            return false;
 
-        activeProfileId = newId;
-        GameSaveSystem.SetActiveProfile(newId);
-        return true;
-    }
 
     public bool DeleteProfile(int profileId)
     {

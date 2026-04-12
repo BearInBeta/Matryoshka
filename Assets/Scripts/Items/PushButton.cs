@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Button : Item
+public class PushButton : Item
 {
 
 

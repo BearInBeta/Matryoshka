@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ButtonWobble : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -7,13 +8,14 @@ public class ButtonWobble : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] private float hoverScale = 1.08f;
     [SerializeField] private float wobbleAngle = 4f;
     [SerializeField] private float speed = 10f;
-
+    private Button button;
     public bool hovering;
     private Vector3 baseScale;
     private Quaternion baseRotation;
 
     private void Awake()
     {
+        button = GetComponent<Button>();
         if (target == null)
             target = transform as RectTransform;
 
@@ -38,11 +40,15 @@ public class ButtonWobble : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (button == null || !button.interactable)
+            return;
         hovering = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (button == null || !button.interactable)
+            return;
         hovering = false;
     }
 }
