@@ -227,7 +227,19 @@ public class GridManager : MonoBehaviour
     // ===============================
     // ✅ ITEM SYSTEM (MULTI-ITEM SAFE)
     // ===============================
-
+    public Transform GetGridTileAt(int x, int y)
+    {
+        if((x < 0) || (y < 0) || x >= width || y >= height)
+            return null;
+        if(grid[x, y] == null)
+        {
+            if(GetItemsAt(x, y).Count > 0)
+                return GetItemsAt(x, y)[0].transform;
+            else
+                return null;
+        }
+        return grid[x, y].transform;
+    }
     void SpawnSetupItems(List<ItemSetup> setUpItems)
     {
         items.Clear();

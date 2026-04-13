@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using UnityEngine.EventSystems;
+using static UnityEditor.Progress;
 
 public class PlayerController : Item
 {
@@ -314,7 +315,19 @@ public class PlayerController : Item
         }
 
         if (!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY), GetDirection(moveX, moveY)) || ContainsEmpty(gridManager.GetItemsAt(x, y), GetDirection(moveX, moveY)))
+        {
+            if (gridManager.GetGridTileAt(newX, newY) != null)
+            {
+                StartCoroutine(RecoilFromTarget(gridManager.GetGridTileAt(newX, newY).transform));
+                if (!notMain)
+                {
+                    FindFirstObjectByType<SFXManager>().PlayClip("error");
+                }
+            }
+            
             return;
+        }
+        
 
         if(currentButton != null)
         {
@@ -390,6 +403,15 @@ public class PlayerController : Item
         if (minSize < button.size)
         {
             button.FailedPress();
+            if(minSize == topSize)
+            {
+                StartCoroutine(InvalidOrientationRoutine(button.gameObject, topPiece, true));
+            }
+            else
+            {
+                StartCoroutine(InvalidOrientationRoutine(button.gameObject, bottomPiece, true));
+
+            }
             return;
         }
 
@@ -407,9 +429,6 @@ public class PlayerController : Item
                     block.Activate();
                 }
                 
-            }else if (item is Teleporter teleporter && teleporter.id == button.id)
-            {
-                teleporter.active = true;
             }
         }
 
@@ -540,11 +559,8 @@ public class PlayerController : Item
         {
             if ((item is PlayerController && item != this) || item is Empty || (item is Block block && block.GetActive(direction, x, y, Mathf.Max(topSize, bottomSize))))
             {
-                StartCoroutine(RecoilFromTarget(item.transform));
-                if (!notMain)
-                {
-                    FindFirstObjectByType<SFXManager>().PlayClip("error");
-                }
+                
+                
                 return true;
             }
                 

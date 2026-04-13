@@ -39,7 +39,12 @@ public class MenuController : MonoBehaviour
 
     public void PlayGame()
     {
-        GoToLevel(GameSaveSystem.GetNextLevel(GameSaveSystem.GetActiveProfileId(), NumberOfLevels));
+        int nextLevel = GameSaveSystem.GetNextLevel(GameSaveSystem.GetActiveProfileId(), NumberOfLevels);
+        if (nextLevel < NumberOfLevels && nextLevel > -1)
+            GoToLevel(nextLevel);
+        else
+            GoToLevel(0);
+
     }
 
     public void GoToLevel(int levelIndex)
@@ -152,6 +157,8 @@ public class MenuController : MonoBehaviour
             {
                 levelOption.SetUpButton(i == 0, 0, i);
             }
+
+            levelOption.menuController = this;
         }
     }
     public void EnableMenu(GameObject menu)

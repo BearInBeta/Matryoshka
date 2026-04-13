@@ -32,7 +32,7 @@ public class PushButton : Item
         );
 
         // Darken
-        button.gameObject.GetComponent<Renderer>().material.color *= 0.7f;
+        //button.gameObject.GetComponent<Renderer>().material.color *= 0.7f;
     }
 
     public void Unpressed()
@@ -45,13 +45,13 @@ public class PushButton : Item
             button.localPosition.z
         );
 
-        button.gameObject.GetComponent<Renderer>().material.color /= 0.7f;
+        //button.gameObject.GetComponent<Renderer>().material.color /= 0.7f;
     }
 
     // ✅ CALL THIS WHEN THE PLAYER IS TOO SMALL TO PRESS
     public void FailedPress()
     {
-        if (!active || button == null)
+        if (button == null)
             return;
 
         if (failedPressRoutine != null)

@@ -16,9 +16,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] LevelData testLevel;
     [SerializeField] GameObject passScreen,pauseScreen;
     [SerializeField] private LevelPassedPanelAnimator passedAnimator;
-
+    [SerializeField] GameObject levelsContainer, levelPrefab, levelSelect;
     [Header("Save/Profile")]
-    [SerializeField] private int activeProfileId = -1;
 
     public bool paused = false;
     float levelTimer = 0f;
@@ -34,10 +33,9 @@ public class GameManager : MonoBehaviour
         else
         {
             GameSaveSystem.SetActiveProfile(GameSession.ActiveProfileId);
-            activeProfileId = GameSaveSystem.GetActiveProfileId();
             LoadLevel(GameSession.LevelToLoad);
         }
-
+        
     }
 
     void Update()
@@ -48,7 +46,40 @@ public class GameManager : MonoBehaviour
             UpdateTimeText();
         }
     }
-
+    private void LevelsSetup()
+    {
+        foreach (Transform child in levelsContainer.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        for (int i = 0; i < levels.Count; i++)
+        {
+            GameObject level = Instantiate(levelPrefab, levelsContainer.transform);
+            LevelOption levelOption = level.GetComponent<LevelOption>();
+            int profileId = GameSaveSystem.GetActiveProfileId();
+            if (profileId != -1)
+            {
+                LevelSaveData lsd = GameSaveSystem.GetLevelData(profileId, i);
+                if (lsd != null)
+                {
+                    levelOption.SetUpButton(true, lsd.stars, i);
+                }
+                else if (GameSaveSystem.GetNextLevel(profileId, levels.Count) == i)
+                {
+                    levelOption.SetUpButton(true, 0, i);
+                }
+                else
+                {
+                    levelOption.SetUpButton(false, 0, i);
+                }
+            }
+            else
+            {
+                levelOption.SetUpButton(i == 0, 0, i);
+            }
+            levelOption.gameManager = this;
+        }
+    }
     public void PassLevel()
     {
         paused = true;
@@ -122,6 +153,10 @@ public class GameManager : MonoBehaviour
 
     private void LoadLevel(LevelData level)
     {
+        if(levelSelect.activeInHierarchy)
+        {
+            levelSelect.GetComponent<UIPanelFader>().FadeOut();
+        }
         steps = 0;
         paused = false;
         Time.timeScale = 1;
@@ -137,6 +172,7 @@ public class GameManager : MonoBehaviour
         gridManager.LoadLevel(level);
         timerRunning = true;
         UpdateTimeText();
+        LevelsSetup();
     }
 
     public void ResetLevel()
@@ -187,15 +223,13 @@ public class GameManager : MonoBehaviour
     public bool DeleteProfile(int profileId)
     {
         bool deleted = GameSaveSystem.DeleteProfile(profileId);
-        activeProfileId = GameSaveSystem.GetActiveProfileId();
         return deleted;
     }
 
     public bool SetActiveProfile(int profileId)
     {
         bool success = GameSaveSystem.SetActiveProfile(profileId);
-        if (success)
-            activeProfileId = profileId;
+
 
         return success;
     }
@@ -208,5 +242,10 @@ public class GameManager : MonoBehaviour
     public int GetCurrentStars()
     {
         return GameSaveSystem.CalculateStars(currentLevel, levelTimer, steps);
+    }
+
+    public void OpenLevelSelect()
+    {
+        levelSelect.SetActive(true);
     }
 }

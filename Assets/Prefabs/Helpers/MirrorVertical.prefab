@@ -122,8 +122,34 @@ MonoBehaviour:
   heightOffsetIncrease: 0.07
   enableSwipeInput: 1
   minSwipeDistance: 80
-  invalidFlashColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  invalidFlashColor: {r: 0.99215686, g: 0.99607843, b: 0.5372549, a: 1}
   flashDuration: 0.12
+  recoilDistance: 0.08
+  recoilDuration: 0.15
+  recoilCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   isMirrorHorizontal: 0
   isMirrorVertical: 1
   notMain: 1

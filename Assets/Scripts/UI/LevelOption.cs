@@ -9,15 +9,12 @@ public class LevelOption : MonoBehaviour
     [SerializeField] GameObject stars, lockpad;
     [SerializeField] Button button;
     private int levelIndex;
-    MenuController menuController;
+    public MenuController menuController;
+    public GameManager gameManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        menuController = GameObject.FindGameObjectWithTag("MenuController").GetComponent<MenuController>();
-        if (menuController == null)
-        {
-            Debug.LogError("No Menu Controller");
-        }
+        
     }
 
     // Update is called once per frame
@@ -27,8 +24,18 @@ public class LevelOption : MonoBehaviour
     }
     public void GoToLevel()
     {
-        
-        menuController.GoToLevel(levelIndex);
+        if (gameManager != null)
+        {
+            gameManager.LoadLevel(levelIndex);
+        }
+        else if(menuController != null)
+        {
+            menuController.GoToLevel(levelIndex);
+        }
+        else
+        {
+            Debug.LogWarning("No game or menu controller");
+        }
     }
     public void SetUpButton(bool open, int starsNumber, int level)
     {
