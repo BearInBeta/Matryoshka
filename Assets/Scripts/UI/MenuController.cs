@@ -9,7 +9,7 @@ public class MenuController : MonoBehaviour
 {
     [SerializeField] GameObject profilePrefab, profileContainer, levelPrefab, levelsContainer;
     [SerializeField] Color[] profileColors;
-    [SerializeField] GameObject options, profileSelect, levelSelect, title, profile, profileCreator, profileDeleter;
+    [SerializeField] GameObject options, profileSelect, levelSelect, title, profile, profileCreator, profileDeleter, gameQuitter;
     [SerializeField] ProfileController profileController;
     [SerializeField] TMP_InputField m_name;
     [SerializeField] TMP_Text areYouSure;
@@ -193,6 +193,15 @@ public class MenuController : MonoBehaviour
         DisableMenu(profileSelect);
         EnableMenu(profileCreator);
     }
+
+    public void ExitGame()
+    {
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
+    }
     public void OpenProfileDeleter(int profileIdToBeDeleted)
     {
         areYouSure.text = "Delete profile " + '"' + GameSaveSystem.GetProfile(profileIdToBeDeleted).profileName + '"';
@@ -237,4 +246,6 @@ public class MenuController : MonoBehaviour
         DisableMenu(profileDeleter);
         EnableMenu(profileSelect);
     }
+
+
 }
