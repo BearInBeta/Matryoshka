@@ -21,6 +21,15 @@ MonoBehaviour:
   - itemPrefab: {fileID: 4590949748391226555, guid: 8526d19d51ff38141ab19280289f2dcc, type: 3}
     x: 3
     y: 0
+  - itemPrefab: {fileID: 1288422847248764091, guid: 4f39c956c77b2ec429239558d8af8956, type: 3}
+    x: 2
+    y: 0
+  - itemPrefab: {fileID: 4278881301326165673, guid: 21246f90cae03b0488b2a1a5c15915aa, type: 3}
+    x: 3
+    y: 2
+  - itemPrefab: {fileID: 4278881301326165673, guid: 2f39eefcc8a99ca4aa0840dcbbebc239, type: 3}
+    x: 2
+    y: 2
   levelName: Going Thrice
   minTime: 0
   minSteps: 0

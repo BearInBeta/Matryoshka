@@ -255,7 +255,7 @@ public class PlayerController : Item
         // ============================
         // ✅ LAUNCHER CHECK (CURRENT TILE)
         // ============================
-
+        PushButton currentButton = null;
         activeLauncher = null;
         List<Item> currentTileItems = gridManager.GetItemsAt(x, y);
 
@@ -264,7 +264,10 @@ public class PlayerController : Item
             if (item is Launcher launcher)
             {
                 activeLauncher = launcher;
-                break;
+                
+            }else if(item is PushButton)
+            {
+                currentButton = (PushButton)item;
             }
         }
 
@@ -313,6 +316,10 @@ public class PlayerController : Item
         if (!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY), GetDirection(moveX, moveY)) || ContainsEmpty(gridManager.GetItemsAt(x, y), GetDirection(moveX, moveY)))
             return;
 
+        if(currentButton != null)
+        {
+            currentButton.Unpressed();
+        }
         // ============================
         // ✅ TILE ITEM RESOLUTION
         // ============================
@@ -391,7 +398,15 @@ public class PlayerController : Item
             
             if (item is Block block && block.id == button.id)
             {
-                block.Deactivate();
+                if(block.active)
+                {
+                    block.Deactivate();
+                }
+                else
+                {
+                    block.Activate();
+                }
+                
             }else if (item is Teleporter teleporter && teleporter.id == button.id)
             {
                 teleporter.active = true;

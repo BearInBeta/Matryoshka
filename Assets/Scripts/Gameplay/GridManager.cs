@@ -34,7 +34,7 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-        playerGameObjects = new List<GameObject>();
+        
         lastWidth = Screen.width;
         lastHeight = Screen.height;
     }
@@ -74,6 +74,7 @@ public class GridManager : MonoBehaviour
 
     public void LoadLevel(LevelData level)
     {
+        playerGameObjects = new List<GameObject>();
         GetComponent<ThemeApplier>().ApplyColors();
         gameObject.SetActive(false);
 

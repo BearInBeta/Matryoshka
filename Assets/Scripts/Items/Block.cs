@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Block : Item
 {
- 
+
 
     [Header("Block State")]
     public bool active = true;
@@ -18,21 +18,28 @@ public class Block : Item
     public int id = 0;
     private bool isAnimating = false;
 
+    private void Start()
+    {
+        if (!active)
+        {
+            StartCoroutine(SinkAndDisable());
+        }
+    }
     public bool GetActive(Direction direction, int x, int y, int size)
     {
         if (size > maxSize || active)
         {
-            if(Mathf.Abs(this.x - x) <= 1 && Mathf.Abs(this.y - y) <= 1)
+            if (Mathf.Abs(this.x - x) <= 1 && Mathf.Abs(this.y - y) <= 1)
             {
-            if (direction == blockSide && this.x == x && this.y == y)
-            {
-                return true;
-            }
+                if (direction == blockSide && this.x == x && this.y == y)
+                {
+                    return true;
+                }
 
-            if ((direction == Direction.Up && blockSide == Direction.Down || direction == Direction.Down && blockSide == Direction.Up || direction == Direction.Left && blockSide == Direction.Right || direction == Direction.Right && blockSide == Direction.Left) && (this.x != x || this.y != y))
-            {
-                return true;
-            }
+                if ((direction == Direction.Up && blockSide == Direction.Down || direction == Direction.Down && blockSide == Direction.Up || direction == Direction.Left && blockSide == Direction.Right || direction == Direction.Right && blockSide == Direction.Left) && (this.x != x || this.y != y))
+                {
+                    return true;
+                }
 
             }
         }
@@ -51,7 +58,7 @@ public class Block : Item
     {
         isAnimating = true;
 
-        Vector3 startPos = spikes.position;
+        Vector3 startPos = spikes.localPosition;
         Vector3 endPos = startPos + Vector3.down * sinkDistance;
 
         float elapsed = 0f;
@@ -62,13 +69,46 @@ public class Block : Item
             float t = Mathf.Clamp01(elapsed / sinkDuration);
             float eased = sinkCurve.Evaluate(t);
 
-            spikes.position = Vector3.Lerp(startPos, endPos, eased);
+            spikes.localPosition = Vector3.Lerp(startPos, endPos, eased);
             yield return null;
         }
 
-        spikes.position = endPos;
+        spikes.localPosition = endPos;
 
 
+
+        isAnimating = false;
+    }
+
+    public void Activate()
+    {
+        if (active || isAnimating)
+            return;
+
+        active = true;
+        StartCoroutine(RiseAndEnable());
+    }
+
+    private IEnumerator RiseAndEnable()
+    {
+        isAnimating = true;
+
+        Vector3 startPos = spikes.localPosition;
+        Vector3 endPos = startPos + Vector3.up * sinkDistance;
+
+        float elapsed = 0f;
+
+        while (elapsed < sinkDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / sinkDuration);
+            float eased = sinkCurve.Evaluate(t);
+
+            spikes.localPosition = Vector3.Lerp(startPos, endPos, eased);
+            yield return null;
+        }
+
+        spikes.localPosition = endPos;
 
         isAnimating = false;
     }
