@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using static GridManager;
 
 [CreateAssetMenu(fileName = "NewLevel", menuName = "Game/Level Data")]
 public class LevelData : ScriptableObject
