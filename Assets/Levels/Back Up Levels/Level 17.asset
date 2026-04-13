@@ -18,28 +18,28 @@ MonoBehaviour:
   - itemPrefab: {fileID: 1288422847248764091, guid: 4f39c956c77b2ec429239558d8af8956, type: 3}
     x: 2
     y: 0
-  - itemPrefab: {fileID: 4278881301326165673, guid: 21246f90cae03b0488b2a1a5c15915aa, type: 3}
-    x: 1
-    y: 4
-  - itemPrefab: {fileID: 4278881301326165673, guid: 2f39eefcc8a99ca4aa0840dcbbebc239, type: 3}
-    x: 2
-    y: 4
-  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
-    x: 0
-    y: 4
-  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
-    x: 3
-    y: 4
-  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
-    x: 4
-    y: 4
-  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
-    x: 5
-    y: 4
   - itemPrefab: {fileID: 4590949748391226555, guid: 85e23b4a14b58d845838b21311af06bf, type: 3}
     x: 0
     y: 5
-  - itemPrefab: {fileID: 4590949748391226555, guid: 8526d19d51ff38141ab19280289f2dcc, type: 3}
+  - itemPrefab: {fileID: 4278881301326165673, guid: 21246f90cae03b0488b2a1a5c15915aa, type: 3}
+    x: 0
+    y: 4
+  - itemPrefab: {fileID: 4278881301326165673, guid: 21246f90cae03b0488b2a1a5c15915aa, type: 3}
+    x: 1
+    y: 4
+  - itemPrefab: {fileID: 4278881301326165673, guid: 21246f90cae03b0488b2a1a5c15915aa, type: 3}
+    x: 2
+    y: 4
+  - itemPrefab: {fileID: 4278881301326165673, guid: 21246f90cae03b0488b2a1a5c15915aa, type: 3}
+    x: 3
+    y: 4
+  - itemPrefab: {fileID: 4278881301326165673, guid: 21246f90cae03b0488b2a1a5c15915aa, type: 3}
+    x: 4
+    y: 4
+  - itemPrefab: {fileID: 4278881301326165673, guid: 21246f90cae03b0488b2a1a5c15915aa, type: 3}
+    x: 5
+    y: 4
+  - itemPrefab: {fileID: 4590949748391226555, guid: 7ebd6a8cbec995b43aafc004af70c3a5, type: 3}
     x: 0
     y: 0
   levelName: Going Thrice

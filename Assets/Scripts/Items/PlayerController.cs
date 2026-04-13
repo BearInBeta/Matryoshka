@@ -65,8 +65,8 @@ public class PlayerController : Item
     [SerializeField] float recoilDuration = 0.15f;
     [SerializeField] AnimationCurve recoilCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-    [SerializeField] bool isMirrorHorizontal = false;
-    [SerializeField] bool isMirrorVertical = false;
+    public bool isMirrorHorizontal = false;
+    public bool isMirrorVertical = false;
     public bool notMain = false;
     GameManager gameManager;
     private bool isMoving = false;

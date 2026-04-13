@@ -394,34 +394,37 @@ public class LevelDataEditor : Editor
         if (prefab == null)
             return "NULL";
 
-        if (prefab is PlayerController)
-            return "P";
+        if (prefab is PlayerController player && !player.notMain)
+            return "Player";
+
+        if (prefab is PlayerController mirror && mirror.notMain)
+            return "Mirror" + (mirror.isMirrorHorizontal? "-Horizontal" : "") + (mirror.isMirrorVertical ? "-Vertical" : "");
 
         if (prefab is Empty)
-            return "EMP";
+            return "Empty";
 
         if (prefab is WinningGate gate)
-            return $"W{gate.requiredSize}";
+            return $"Win{gate.requiredSize}";
 
         if (prefab is Teleporter tp)
-            return $"T{tp.id}" + (tp.active ? "" : " off");
+            return $"Teleporter{tp.id}" + (tp.active ? " on" : " off");
 
         if (prefab is PushButton btn)
-            return $"BTN{btn.id}:{btn.size}" + (btn.active ? "" : " off");
+            return $"Button{btn.id}:{btn.size}";
 
         if (prefab is Launcher launcher)
-            return $"L {launcher.upDistance}/{launcher.downDistance}/{launcher.leftDistance}/{launcher.rightDistance}";
+            return $"Launcher {launcher.upDistance}/{launcher.downDistance}/{launcher.leftDistance}/{launcher.rightDistance}";
 
         if (prefab is DollPiece doll)
         {
-            string prefix = doll.type == DollPieceType.Top ? "DT" : "DB";
+            string prefix = doll.type == DollPieceType.Top ? "Top Piece" : "Bottom Piece";
             return $"{prefix}{doll.size}";
         }
 
         if (prefab is Block block)
         {
             string dir = DirectionToSymbol(block.blockSide);
-            return $"B{dir} id{block.id} s{block.maxSize}" + (block.active ? "" : " off");
+            return $"Spikes-{dir} " + ( block.id >= 0 ? block.id : "unpassable");
         }
 
         return prefab.GetType().Name;
