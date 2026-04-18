@@ -13,7 +13,8 @@ public class MenuController : MonoBehaviour
     [SerializeField] ProfileController profileController;
     [SerializeField] TMP_InputField m_name;
     [SerializeField] TMP_Text areYouSure;
-    [SerializeField] int NumberOfLevels;
+    [SerializeField] Levels levels;
+    int NumberOfLevels;
     [SerializeField] GameObject Player, Particles;
     [SerializeField] float waitForSeconds = 0.5f;
     private int profileIdToBeCreated;
@@ -22,6 +23,7 @@ public class MenuController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        NumberOfLevels = levels.levels.Count;
         Time.timeScale = 1.0f;
         options.SetActive(true);
         title.SetActive(true);

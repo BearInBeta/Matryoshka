@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 using UnityEngine.EventSystems;
-using static UnityEditor.Progress;
 
 public class PlayerController : Item
 {

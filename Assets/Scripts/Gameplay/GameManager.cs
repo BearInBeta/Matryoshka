@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public GridManager gridManager;
-    public List<LevelData> levels;
+    List<LevelData> levels;
+    [SerializeField] Levels m_levels;
     private LevelData currentLevel;
     public TMP_Text topSizeText, bottomSizeText, stepText, timeText;
     public int startAt = 1;
@@ -26,7 +27,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        if(testLevel != null)
+        levels = m_levels.levels;
+        if (testLevel != null)
         {
             LoadLevel(testLevel);
         }
