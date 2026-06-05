@@ -373,10 +373,10 @@ public class PlayerController : Item
         // 5. Button
         foreach (Item item in targetItems)
         {
-            ExecuteMove(newX, newY);
+            
             if (item is PushButton button && button.active)
             {
-                
+                ExecuteMove(newX, newY);
                 HandleButton(button);
                 return;
             }
@@ -385,11 +385,10 @@ public class PlayerController : Item
         // 4. Empty tile is already filtered earlier
 
         // 5. No blocking item → normal move
-        if (targetItems.Count == 0)
-        {
+        
             ExecuteMove(newX, newY);
             return;
-        }
+        
     }
     private void HandleButton(PushButton button)
     {
@@ -600,7 +599,8 @@ public class PlayerController : Item
         isMoving = true;
 
         Flip(dx, dy);
-
+        print("flip");
+;
         if (isJump)
             FindFirstObjectByType<SFXManager>().PlayClip("jump");
         else

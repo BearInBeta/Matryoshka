@@ -12,60 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71dbd9c5df6a31745aa5e453173647d4, type: 3}
   m_Name: Level 11
   m_EditorClassIdentifier: 
-  width: 5
+  width: 4
   height: 4
   setUpItems:
+  - itemPrefab: {fileID: 6528339407175856985, guid: ced612e1b9e2933468c1d6e34bf561d1, type: 3}
+    x: 1
+    y: 1
   - itemPrefab: {fileID: 4590949748391226555, guid: 85e23b4a14b58d845838b21311af06bf, type: 3}
     x: 0
-    y: 3
-  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
-    x: 1
     y: 0
-  - itemPrefab: {fileID: 4278881301326165673, guid: 1fb04baf5ee97eb478a562a88ae2378d, type: 3}
-    x: 1
+  - itemPrefab: {fileID: 4278881301326165673, guid: 21246f90cae03b0488b2a1a5c15915aa, type: 3}
+    x: 0
     y: 1
-  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
-    x: 1
-    y: 2
-  - itemPrefab: {fileID: 1288422847248764091, guid: b1f5d8ca7ccc07e479389589758364b6, type: 3}
-    x: 4
-    y: 3
-  - itemPrefab: {fileID: 584134196615349350, guid: a104285feea0335499b9a1fd3cf9fe4d, type: 3}
-    x: 3
-    y: 2
-  - itemPrefab: {fileID: 9214700007602707899, guid: 28bbf8d22638d4940b7f3b8f7f55c57b, type: 3}
-    x: 2
-    y: 2
-  - itemPrefab: {fileID: 1212297049299781429, guid: a3ebe05b01a8904478b10870f0db49fb, type: 3}
-    x: 1
-    y: 3
-  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
-    x: 3
-    y: 3
-  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
-    x: 3
-    y: 2
-  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
-    x: 3
-    y: 1
-  - itemPrefab: {fileID: 4278881301326165673, guid: f67ca96ed3e62b14a9a12b7541d2cd26, type: 3}
-    x: 3
-    y: 0
   - itemPrefab: {fileID: 8793951698171551982, guid: 844019e6f8cba5d4e90a925a6da8d79d, type: 3}
     x: 0
-    y: 2
-  - itemPrefab: {fileID: 1288422847248764091, guid: 07544df55b38d644e8dcacd979367dd5, type: 3}
-    x: 0
-    y: 0
-  - itemPrefab: {fileID: 9214700007602707899, guid: 2e6eb9735b063c046bf1d67c6706d79a, type: 3}
-    x: 2
-    y: 0
-  - itemPrefab: {fileID: 584134196615349350, guid: 6f7ae196b889bed4ba0043fc3810e0ca, type: 3}
-    x: 0
     y: 1
-  - itemPrefab: {fileID: 4278881301326165673, guid: a2536f6d1239ca844b2be6a3d688d70a, type: 3}
-    x: 1
-    y: 3
   levelName: Back & Forth
   minTime: 8
   minSteps: 28
