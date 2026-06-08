@@ -37,7 +37,6 @@ public class PlayerController : Item
 
     [Header("Flip Animation")]
     public float flipDuration = 0.2f;
-    private Coroutine flipRoutine;
 
     [Header("Stacking State")]
     public int topSize = 1;
@@ -196,10 +195,15 @@ public class PlayerController : Item
     public void StartPlayerPos()
     {
         gridManager = FindFirstObjectByType<GridManager>();
-        Vector3 startWorldPos = gridManager.GridToWorld(x, y) + Vector3.up * heightOffsetCalculator();
+        Vector3 startWorldPos = TargetPositionCalculator(x, y);
 
         transform.position = startWorldPos;
         targetPosition = startWorldPos;
+    }
+
+    public Vector3 TargetPositionCalculator(int x, int y)
+    {
+        return gridManager.GridToWorld(x, y) + Vector3.up * heightOffsetCalculator();
     }
     // This gets called automatically by PlayerInput component
     public void OnMove(InputAction.CallbackContext ctx)
@@ -207,7 +211,13 @@ public class PlayerController : Item
 
         if (ctx.performed && !gameManager.paused)
         {
-            moveInput = ctx.ReadValue<Vector2>();
+            Vector2 movement = ctx.ReadValue<Vector2>();
+            if (Mathf.Abs(movement.x) == 1.0f || Mathf.Abs(movement.y) == 1.0f)
+            {
+                Debug.Log(movement);
+                moveInput = movement;
+            }
+            
         }
     }
 
@@ -243,7 +253,12 @@ public class PlayerController : Item
             moveX = 0;
             moveY = -1;
         }
-        AttemptMove(moveX, moveY);
+        if(moveX != 0 || moveY != 0)
+        {
+            
+            AttemptMove(moveX, moveY);
+        }
+        
     }
 
     private void AttemptMove(int moveX, int moveY)
@@ -314,8 +329,10 @@ public class PlayerController : Item
 
         if (!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY), GetDirection(moveX, moveY)) || ContainsEmpty(gridManager.GetItemsAt(x, y), GetDirection(moveX, moveY)))
         {
+
             if (gridManager.GetGridTileAt(newX, newY) != null)
             {
+                
                 StartCoroutine(RecoilFromTarget(gridManager.GetGridTileAt(newX, newY).transform));
                 if (!notMain)
                 {
@@ -489,7 +506,7 @@ public class PlayerController : Item
         y = target.y;
 
         Vector3 targetBasePos =
-            gridManager.GridToWorld(x, y) + Vector3.up * heightOffsetCalculator();
+            TargetPositionCalculator(x, y);
 
         transform.position = targetBasePos + Vector3.down * teleportRiseHeight;
 
@@ -584,7 +601,7 @@ public class PlayerController : Item
         y = newY;
 
         targetPosition =
-            gridManager.GridToWorld(x, y) + Vector3.up * heightOffsetCalculator();
+            TargetPositionCalculator(x, y);
 
         bool isJump = Mathf.Abs(dx) > 1 || Mathf.Abs(dy) > 1;
 
@@ -599,7 +616,7 @@ public class PlayerController : Item
         isMoving = true;
 
         Flip(dx, dy);
-        print("flip");
+        
 ;
         if (isJump)
             FindFirstObjectByType<SFXManager>().PlayClip("jump");
@@ -808,7 +825,7 @@ public class PlayerController : Item
         if (target == null)
             yield break;
 
-        Vector3 startPos = transform.position;
+        Vector3 startPos = TargetPositionCalculator(x, y);
 
         // Direction toward the invalid piece (flattened vertically)
         Vector3 dir = (target.position - startPos);
