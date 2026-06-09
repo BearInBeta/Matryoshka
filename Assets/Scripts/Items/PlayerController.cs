@@ -330,15 +330,7 @@ public class PlayerController : Item
         if (!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY), GetDirection(moveX, moveY)) || ContainsEmpty(gridManager.GetItemsAt(x, y), GetDirection(moveX, moveY)))
         {
 
-            if (gridManager.GetGridTileAt(newX, newY) != null)
-            {
-                
-                StartCoroutine(RecoilFromTarget(gridManager.GetGridTileAt(newX, newY).transform));
-                if (!notMain)
-                {
-                    FindFirstObjectByType<SFXManager>().PlayClip("error");
-                }
-            }
+            
             
             return;
         }
