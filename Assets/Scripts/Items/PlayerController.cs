@@ -214,7 +214,7 @@ public class PlayerController : Item
             Vector2 movement = ctx.ReadValue<Vector2>();
             if (Mathf.Abs(movement.x) == 1.0f || Mathf.Abs(movement.y) == 1.0f)
             {
-                Debug.Log(movement);
+                
                 moveInput = movement;
             }
             
@@ -329,9 +329,6 @@ public class PlayerController : Item
 
         if (!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY), GetDirection(moveX, moveY)) || ContainsEmpty(gridManager.GetItemsAt(x, y), GetDirection(moveX, moveY)))
         {
-
-            
-            
             return;
         }
         
@@ -388,6 +385,11 @@ public class PlayerController : Item
                 ExecuteMove(newX, newY);
                 HandleButton(button);
                 return;
+            }else if(item is NestingStation nestingStation && nestingStation.active)
+            {
+                ExecuteMove(newX, newY);
+                HandleNestingStation(nestingStation);
+                return;
             }
         }
 
@@ -398,6 +400,60 @@ public class PlayerController : Item
             ExecuteMove(newX, newY);
             return;
         
+    }
+
+    private void HandleNestingStation(NestingStation nestingStation)
+    {
+        if (!nestingStation.active)
+            return;
+
+        StartCoroutine(NestingStationRoutine(nestingStation));
+    }
+
+    private IEnumerator NestingStationRoutine(NestingStation nestingStation)
+    {
+        while (isMoving)
+            yield return null;
+
+        // Or if you have this method:
+        // nestingStation.Deactivate();
+
+        GameObject pieceObject = !isUpsideDown ? bottomPiece : topPiece;
+
+        DollPiece piece = pieceObject.GetComponentInParent<DollPiece>();
+
+        if (piece == null)
+        {
+            yield break;
+        }
+        nestingStation.SetActive(false);
+
+        if (!isUpsideDown)
+        {
+            bottomSize = Mathf.Max(1, bottomSize - 1);
+        }
+        else
+        {
+            topSize = Mathf.Max(1, topSize - 1);
+        }
+
+        piece.transform.SetParent(gridManager.transform);
+
+        piece.Initialize(nestingStation.x, nestingStation.y);
+
+        piece.transform.position = gridManager.GridToWorld(
+            nestingStation.x,
+            nestingStation.y,
+            piece.transform.localScale.y
+        );
+
+        piece.transform.rotation = Quaternion.identity;
+
+        gridManager.RegisterItem(piece);
+
+        gameManager.UpdateSizeText(topSize, bottomSize);
+
+        FindFirstObjectByType<SFXManager>().PlayClip("attach");
     }
     private void HandleButton(PushButton button)
     {
@@ -940,7 +996,13 @@ public class PlayerController : Item
             yield return null;
         }
         Vector3 localOffset;
-
+        foreach (Item item in gridManager.GetItemsAt(piece.x, piece.y))
+        {
+            if (item is NestingStation nestingStation)
+            {
+                nestingStation.SetActive(true);
+            }
+        }
         if (piece.type == DollPieceType.Top)
         {
             // Stack upward from the top half
@@ -958,8 +1020,10 @@ public class PlayerController : Item
         }
 
         gameManager.UpdateSizeText(topSize, bottomSize);
+
         gridManager.RemoveItem(piece);
         piece.AttachTo(transform, localOffset);
+        // Reactivate any nesting station on this tile now that the piece is gone
 
         FindFirstObjectByType<SFXManager>().PlayClip("attach");
 
