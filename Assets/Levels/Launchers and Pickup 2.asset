@@ -58,5 +58,5 @@ MonoBehaviour:
     x: 3
     y: 3
   levelName: Split!
-  minTime: 3
-  minSteps: 10
+  minTime: 8
+  minSteps: 11

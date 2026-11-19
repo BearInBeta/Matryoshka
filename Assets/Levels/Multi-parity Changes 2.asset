@@ -85,5 +85,5 @@ MonoBehaviour:
     x: 1
     y: 8
   levelName: Zigzag
-  minTime: 5
-  minSteps: 17
+  minTime: 15
+  minSteps: 22

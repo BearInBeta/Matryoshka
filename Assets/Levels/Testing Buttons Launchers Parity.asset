@@ -163,5 +163,5 @@ MonoBehaviour:
     x: 6
     y: 1
   levelName: Double Steps
-  minTime: 8
-  minSteps: 28
+  minTime: 28
+  minSteps: 49

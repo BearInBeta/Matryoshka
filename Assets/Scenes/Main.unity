@@ -54838,6 +54838,7 @@ MonoBehaviour:
   Player: {fileID: 1586764722}
   Particles: {fileID: 100006, guid: 9570f8116e9822e40bb18133251cc114, type: 3}
   waitForSeconds: 1
+  creditsText: {fileID: 1832328206}
 --- !u!4 &1451649674
 Transform:
   m_ObjectHideFlags: 0

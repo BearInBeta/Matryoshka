@@ -40,5 +40,5 @@ MonoBehaviour:
     x: 1
     y: 1
   levelName: VHS (Verify, Hop, Switch)
-  minTime: 0
+  minTime: 6
   minSteps: 9

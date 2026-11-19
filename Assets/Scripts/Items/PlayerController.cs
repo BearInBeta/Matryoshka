@@ -21,6 +21,14 @@ public class PlayerController : Item
     [SerializeField] GameObject topPiece;
     [SerializeField] GameObject bottomPiece;
 
+    // Pieces currently worn on each half, innermost first. Used so a nesting station
+    // always removes the outermost piece that is actually attached, and so the
+    // topPiece/bottomPiece references fall back to the next layer after a drop.
+    private readonly List<DollPiece> topStack = new List<DollPiece>();
+    private readonly List<DollPiece> bottomStack = new List<DollPiece>();
+    private GameObject baseTopPiece;
+    private GameObject baseBottomPiece;
+
     [Header("Jump Movement")]
     [SerializeField] float jumpDuration = 0.35f;
     [SerializeField] float jumpArcHeight = 1.2f;
@@ -85,9 +93,14 @@ public class PlayerController : Item
 
     private void Start()
     {
+        baseTopPiece = topPiece;
+        baseBottomPiece = bottomPiece;
         gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
-        gameManager.UpdateSizeText(topSize, bottomSize);
-        gameManager.UpdateStepText(steps);
+        if (!notMain)
+        {
+            gameManager.UpdateSizeText(topSize, bottomSize);
+            gameManager.UpdateStepText(steps);
+        }
         cameraShake = Camera.main.GetComponent<CameraShake>();
     }
 
@@ -329,6 +342,18 @@ public class PlayerController : Item
 
         if (!IsInsideGrid(newX, newY) || ContainsEmpty(gridManager.GetItemsAt(newX, newY), GetDirection(moveX, moveY)) || ContainsEmpty(gridManager.GetItemsAt(x, y), GetDirection(moveX, moveY)))
         {
+            // Secret level: walking into the other doll starts the merge cutscene.
+            if (IsInsideGrid(newX, newY) && gameManager.IsSecretLevel)
+            {
+                foreach (Item item in gridManager.GetItemsAt(newX, newY))
+                {
+                    if (item is PlayerController other && other != this)
+                    {
+                        gameManager.PlayersTouched(this, other);
+                        break;
+                    }
+                }
+            }
             return;
         }
         
@@ -418,23 +443,35 @@ public class PlayerController : Item
         // Or if you have this method:
         // nestingStation.Deactivate();
 
-        GameObject pieceObject = !isUpsideDown ? bottomPiece : topPiece;
+        // The half touching the ground hands over its outermost worn piece.
+        List<DollPiece> stack = !isUpsideDown ? bottomStack : topStack;
 
-        DollPiece piece = pieceObject.GetComponentInParent<DollPiece>();
-
-        if (piece == null)
+        if (stack.Count == 0)
         {
             yield break;
         }
+
+        DollPiece piece = stack[stack.Count - 1];
+        stack.RemoveAt(stack.Count - 1);
+
         nestingStation.SetActive(false);
+
+        DollPiece innerPiece = stack.Count > 0 ? stack[stack.Count - 1] : null;
+        int innerSize = innerPiece != null ? innerPiece.size : 1;
 
         if (!isUpsideDown)
         {
-            bottomSize = Mathf.Max(1, bottomSize - 1);
+            bottomSize = innerSize;
+            bottomPiece = innerPiece != null
+                ? innerPiece.GetComponentInChildren<MeshRenderer>().gameObject
+                : baseBottomPiece;
         }
         else
         {
-            topSize = Mathf.Max(1, topSize - 1);
+            topSize = innerSize;
+            topPiece = innerPiece != null
+                ? innerPiece.GetComponentInChildren<MeshRenderer>().gameObject
+                : baseTopPiece;
         }
 
         piece.transform.SetParent(gridManager.transform);
@@ -451,7 +488,7 @@ public class PlayerController : Item
 
         gridManager.RegisterItem(piece);
 
-        gameManager.UpdateSizeText(topSize, bottomSize);
+        if (!notMain) gameManager.UpdateSizeText(topSize, bottomSize);
 
         FindFirstObjectByType<SFXManager>().PlayClip("attach");
     }
@@ -641,7 +678,10 @@ public class PlayerController : Item
     private void ExecuteMove(int newX, int newY)
     {
         steps++;
-        gameManager.UpdateStepText(steps);
+        // Only the main doll's steps count towards the star target; mirrors moving
+        // in the same frame would otherwise overwrite the shared counter.
+        if (!notMain)
+            gameManager.UpdateStepText(steps);
         int dx = newX - x;
         int dy = newY - y;
 
@@ -967,9 +1007,15 @@ public class PlayerController : Item
     }
     IEnumerator TryWin(WinningGate gate)
     {
+        while (isMoving)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        // Mirrors can stand on a gate but never complete the level.
         if (notMain)
         {
             PlayInvalidOrientationFeedback(gate.gameObject, bottomPiece);
+            yield break;
         }
         while (isMoving)
         {
@@ -1007,6 +1053,7 @@ public class PlayerController : Item
         {
             // Stack upward from the top half
             topPiece = piece.gameObject.GetComponentInChildren<MeshRenderer>().gameObject;
+            topStack.Add(piece);
             localOffset = Vector3.up * ((topSize - 1) * 0.4f);
 
         }
@@ -1014,12 +1061,13 @@ public class PlayerController : Item
         {
             // Stack downward from the bottom half
             bottomPiece = piece.gameObject.GetComponentInChildren<MeshRenderer>().gameObject;
+            bottomStack.Add(piece);
 
             localOffset = Vector3.down * ((bottomSize - 1) * 0.4f);
 
         }
 
-        gameManager.UpdateSizeText(topSize, bottomSize);
+        if (!notMain) gameManager.UpdateSizeText(topSize, bottomSize);
 
         gridManager.RemoveItem(piece);
         piece.AttachTo(transform, localOffset);

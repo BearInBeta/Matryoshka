@@ -17,6 +17,8 @@ public class MenuController : MonoBehaviour
     int NumberOfLevels;
     [SerializeField] GameObject Player, Particles;
     [SerializeField] float waitForSeconds = 0.5f;
+    [Tooltip("Credits text on the Info screen; reused by the ending sequence.")]
+    [SerializeField] TMP_Text creditsText;
     private int profileIdToBeCreated;
     private int profileIdToBeDeleted;
     private int levelToStart = -1;
@@ -31,6 +33,48 @@ public class MenuController : MonoBehaviour
 
         ProfileSetup();
         ProfileSelectSetup();
+
+        if (GameSession.PlayEnding)
+            PlayEnding();
+    }
+
+    // Shown once after the secret level: "fin.", thanks and credits over the menu background.
+    private void PlayEnding()
+    {
+        GameSession.PlayEnding = false;
+        options.SetActive(false);
+        title.SetActive(false);
+        profile.SetActive(false);
+
+        EndingSequence ending = gameObject.AddComponent<EndingSequence>();
+        ending.Play(FindCreditsText(), () =>
+        {
+            options.SetActive(true);
+            title.SetActive(true);
+            profile.SetActive(true);
+        });
+    }
+
+    private TMP_Text FindCreditsText()
+    {
+        if (creditsText != null)
+            return creditsText;
+
+        // Fallback: the longest text inside the (inactive) Info panel.
+        TMP_Text best = null;
+        foreach (TMP_Text t in FindObjectsByType<TMP_Text>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            for (Transform p = t.transform; p != null; p = p.parent)
+            {
+                if (p.name == "Info")
+                {
+                    if (best == null || t.text.Length > best.text.Length)
+                        best = t;
+                    break;
+                }
+            }
+        }
+        return best;
     }
 
     // Update is called once per frame
@@ -161,6 +205,16 @@ public class MenuController : MonoBehaviour
             }
 
             levelOption.menuController = this;
+        }
+
+        // Secret level: appears once every level has 3 stars.
+        int activeProfile = GameSaveSystem.GetActiveProfileId();
+        if (levels.secretLevel != null && activeProfile != -1 && GameSaveSystem.HasAllStars(activeProfile, NumberOfLevels))
+        {
+            GameObject secret = Instantiate(levelPrefab, levelsContainer.transform);
+            LevelOption secretOption = secret.GetComponent<LevelOption>();
+            secretOption.SetUpSecretButton(NumberOfLevels);
+            secretOption.menuController = this;
         }
     }
     public void EnableMenu(GameObject menu)

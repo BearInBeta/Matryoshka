@@ -24,6 +24,10 @@ public class GameManager : MonoBehaviour
     float levelTimer = 0f;
     bool timerRunning = false;
     int steps = 0;
+    bool secretCutscenePlaying = false;
+
+    /// <summary>True while the secret (bonus) level is loaded.</summary>
+    public bool IsSecretLevel => m_levels != null && m_levels.secretLevel != null && currentLevel == m_levels.secretLevel;
 
     void Start()
     {
@@ -81,6 +85,15 @@ public class GameManager : MonoBehaviour
             }
             levelOption.gameManager = this;
         }
+
+        int activeProfile = GameSaveSystem.GetActiveProfileId();
+        if (m_levels.secretLevel != null && activeProfile != -1 && GameSaveSystem.HasAllStars(activeProfile, levels.Count))
+        {
+            GameObject secret = Instantiate(levelPrefab, levelsContainer.transform);
+            LevelOption secretOption = secret.GetComponent<LevelOption>();
+            secretOption.SetUpSecretButton(levels.Count);
+            secretOption.gameManager = this;
+        }
     }
     public void PassLevel()
     {
@@ -95,6 +108,31 @@ public class GameManager : MonoBehaviour
             pbw.hovering = false;
         }
         passedAnimator.Play(currentLevel, levelTimer, steps);
+    }
+
+    /// <summary>Called by a doll that bumps into the other doll. Only reacts on the secret level.</summary>
+    public void PlayersTouched(PlayerController a, PlayerController b)
+    {
+        if (!IsSecretLevel || secretCutscenePlaying)
+            return;
+
+        PlayerController main = a.notMain ? b : a;
+        PlayerController mirror = a.notMain ? a : b;
+        if (main == null || mirror == null || main.notMain || !mirror.notMain)
+            return;
+
+        secretCutscenePlaying = true;
+        paused = true;            // stops all doll input
+        timerRunning = false;
+
+        Canvas hud = levelName != null ? levelName.canvas.rootCanvas : null;
+        SecretMergeCutscene cutscene = gameObject.AddComponent<SecretMergeCutscene>();
+        cutscene.Play(main, mirror, hud, () =>
+        {
+            // The cutscene ends on a black screen; the main menu picks up from there.
+            GameSession.PlayEnding = true;
+            GoToMain();
+        });
     }
 
     public void UpdateSizeText(int topSize, int bottomSize)
@@ -150,6 +188,12 @@ public class GameManager : MonoBehaviour
 
     public void LoadLevel(int level)
     {
+        // Index levels.Count is the secret level (only offered once it is unlocked).
+        if (level == levels.Count && m_levels.secretLevel != null)
+        {
+            LoadLevel(m_levels.secretLevel);
+            return;
+        }
         LoadLevel(levels[level % levels.Count]);
     }
 
@@ -161,6 +205,7 @@ public class GameManager : MonoBehaviour
         }
         steps = 0;
         paused = false;
+        secretCutscenePlaying = false;
         Time.timeScale = 1;
         pauseScreen.SetActive(false);
         passScreen.SetActive(false);
@@ -170,7 +215,10 @@ public class GameManager : MonoBehaviour
         
         
 
-        levelName.text = "Level " + (levels.IndexOf(level) + 1) + " - " + level.levelName;
+        if (m_levels.secretLevel != null && level == m_levels.secretLevel)
+            levelName.text = level.levelName;
+        else
+            levelName.text = "Level " + (levels.IndexOf(level) + 1) + " - " + level.levelName;
         gridManager.LoadLevel(level);
         timerRunning = true;
         UpdateTimeText();
@@ -190,6 +238,8 @@ public class GameManager : MonoBehaviour
     }
     public void TogglePause()
     {
+        if (secretCutscenePlaying)
+            return;
 
         paused = !paused;
         if (paused)

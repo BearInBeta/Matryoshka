@@ -49,5 +49,5 @@ MonoBehaviour:
     x: 1
     y: 3
   levelName: Orderly Matters
-  minTime: 0
-  minSteps: 0
+  minTime: 10
+  minSteps: 15

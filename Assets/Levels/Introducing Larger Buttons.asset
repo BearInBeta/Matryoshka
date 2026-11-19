@@ -70,5 +70,5 @@ MonoBehaviour:
     x: 0
     y: 3
   levelName: Three's Company
-  minTime: 8
-  minSteps: 28
+  minTime: 16
+  minSteps: 31

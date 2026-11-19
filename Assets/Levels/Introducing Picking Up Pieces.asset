@@ -28,5 +28,5 @@ MonoBehaviour:
     x: 4
     y: 0
   levelName: Size matters
-  minTime: 2
+  minTime: 3
   minSteps: 6

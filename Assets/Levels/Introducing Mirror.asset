@@ -70,5 +70,5 @@ MonoBehaviour:
     x: 2
     y: 1
   levelName: Mirror Mirror
-  minTime: 0
-  minSteps: 0
+  minTime: 9
+  minSteps: 17

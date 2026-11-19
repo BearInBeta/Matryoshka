@@ -37,6 +37,16 @@ public class LevelOption : MonoBehaviour
             Debug.LogWarning("No game or menu controller");
         }
     }
+    /// <summary>Unlocked secret level: shown after the last level, with no stars.</summary>
+    public void SetUpSecretButton(int level)
+    {
+        levelIndex = level;
+        levelNumber.text = "?";
+        stars.SetActive(false);
+        lockpad.SetActive(false);
+        button.interactable = true;
+    }
+
     public void SetUpButton(bool open, int starsNumber, int level)
     {
         levelIndex = level;

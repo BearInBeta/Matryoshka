@@ -64,5 +64,5 @@ MonoBehaviour:
     x: 1
     y: 1
   levelName: Where's your ear
-  minTime: 5
+  minTime: 11
   minSteps: 17

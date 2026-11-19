@@ -37,5 +37,5 @@ MonoBehaviour:
     x: 1
     y: 1
   levelName: Reset If Stuck
-  minTime: 5
+  minTime: 10
   minSteps: 19

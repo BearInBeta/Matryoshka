@@ -61,5 +61,5 @@ MonoBehaviour:
     x: 0
     y: 3
   levelName: Color Match
-  minTime: 0
-  minSteps: 0
+  minTime: 8
+  minSteps: 10

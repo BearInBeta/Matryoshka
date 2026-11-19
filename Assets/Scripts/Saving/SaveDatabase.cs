@@ -225,6 +225,22 @@ public static class GameSaveSystem
         return stars;
     }
 
+    /// <summary>True when every level index in [0, totalLevelCount) has 3 stars on this profile.</summary>
+    public static bool HasAllStars(int profileId, int totalLevelCount)
+    {
+        SaveProfile profile = GetProfile(profileId);
+        if (profile == null || totalLevelCount <= 0)
+            return false;
+
+        for (int i = 0; i < totalLevelCount; i++)
+        {
+            LevelSaveData lsd = profile.completedLevels.Find(l => l.levelIndex == i);
+            if (lsd == null || lsd.stars < 3)
+                return false;
+        }
+        return true;
+    }
+
     public static void DeleteAllSaveData()
     {
         cache = new SaveDatabase();

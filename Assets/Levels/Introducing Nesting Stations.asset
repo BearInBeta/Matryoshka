@@ -58,5 +58,5 @@ MonoBehaviour:
     x: 5
     y: 0
   levelName: Boop boop
-  minTime: 0
-  minSteps: 0
+  minTime: 5
+  minSteps: 9

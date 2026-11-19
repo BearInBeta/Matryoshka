@@ -52,5 +52,5 @@ MonoBehaviour:
     x: 1
     y: 0
   levelName: Forgot my pants
-  minTime: 3
+  minTime: 7
   minSteps: 10

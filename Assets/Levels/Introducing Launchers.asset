@@ -40,5 +40,5 @@ MonoBehaviour:
     x: 0
     y: 0
   levelName: Jumper
-  minTime: 3
-  minSteps: 10
+  minTime: 4
+  minSteps: 6
