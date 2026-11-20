@@ -982,6 +982,12 @@ public class PlayerController : Item
 
         feedbackCoroutine = null;
     }
+    // Renderers currently flashing, with their true colour and how many flashes overlap.
+    // Both dolls can flash the same piece in the same frame (e.g. mirror levels); without
+    // this the second flash would record the flash colour as "original" and never revert.
+    private static readonly Dictionary<Renderer, KeyValuePair<Color, int>> activeFlashes =
+        new Dictionary<Renderer, KeyValuePair<Color, int>>();
+
     private IEnumerator FlashObject(GameObject obj)
     {
         if (obj == null)
@@ -992,11 +998,44 @@ public class PlayerController : Item
             yield break;
 
         Material mat = r.material; // instance copy
-        Color original = mat.color;
+
+        if (activeFlashes.TryGetValue(r, out KeyValuePair<Color, int> entry))
+        {
+            activeFlashes[r] = new KeyValuePair<Color, int>(entry.Key, entry.Value + 1);
+        }
+        else
+        {
+            RemoveDestroyedFlashes();
+            activeFlashes[r] = new KeyValuePair<Color, int>(mat.color, 1);
+        }
 
         mat.color = invalidFlashColor;
         yield return new WaitForSeconds(flashDuration);
-        mat.color = original;
+
+        if (r == null)
+            yield break;
+
+        if (activeFlashes.TryGetValue(r, out entry))
+        {
+            if (entry.Value <= 1)
+            {
+                activeFlashes.Remove(r);
+                r.material.color = entry.Key; // restore only when the last overlapping flash ends
+            }
+            else
+            {
+                activeFlashes[r] = new KeyValuePair<Color, int>(entry.Key, entry.Value - 1);
+            }
+        }
+    }
+
+    private static void RemoveDestroyedFlashes()
+    {
+        List<Renderer> dead = null;
+        foreach (Renderer key in activeFlashes.Keys)
+            if (key == null) (dead ??= new List<Renderer>()).Add(key);
+        if (dead != null)
+            foreach (Renderer key in dead) activeFlashes.Remove(key);
     }
 
 

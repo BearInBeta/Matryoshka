@@ -1,6 +1,45 @@
-3D Particles 2025 by Unluck Software from Unity Asset Store
-GUI - Wooden by layerlabgames from Game Dev Market
-MK Toon - Stylized Shader by Michael Kremmel from Unity Asset Store
-Liquid Glass & Blur UI Shader - Mobile/Desktop - by Lith Games from Unity Asset Store
-AllSky - 220+ Sky / Skybox Set by rpgwhitelock from Unity Asset Store
-2D Icons - Picto Total Pack by layerlabgames from Game Dev Market
+DEVELOPMENT
+Game Design, Programming & Art
+Bear In Beta
+Game Engine
+Unity 6 — Unity Technologies
+
+MUSIC
+Massive Game Music Collection
+AndySv — Game Dev Market
+
+SOUND EFFECTS
+Pro Sound Collection
+Gamemaster Audio — Game Dev Market
+2000 Game Sound Effects
+GameBurp — Game Dev Market
+Dreamy & Mystery Sound Effects Pack 1
+SHASHIRAJproductions — Game Dev Market
+
+FONTS
+Nunito
+Vernon Adams, Cyreal, Jacques Le Bailly — Google Fonts
+Noto Emoji
+Google Fonts
+
+ART & USER INTERFACE
+GUI – Wooden
+layerlabgames — Game Dev Market
+2D Icons – Picto Total Pack
+layerlabgames — Game Dev Market
+Traffic Cone 3D Model
+bazsa — Free3D
+Hurricane Vortex Symbol
+Pngtree
+
+VISUAL EFFECTS & SHADERS
+3D Particles 2025
+Unluck Software — Unity Asset Store
+MK Toon – Stylized Shader
+Michael Kremmel — Unity Asset Store
+Liquid Glass & Blur UI Shader – Mobile/Desktop
+Lith Games — Unity Asset Store
+
+ENVIRONMENT
+AllSky – 220+ Sky / Skybox Set
+rpgwhitelock — Unity Asset Store

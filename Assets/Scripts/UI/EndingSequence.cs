@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,13 +28,14 @@ public class EndingSequence : MonoBehaviour
 
     private RectTransform canvasRect;
 
-    public void Play(TMP_Text creditsSource, Action onFinished)
+    public void Play(IList<TMP_Text> creditsSources, Action onFinished)
     {
-        StartCoroutine(Run(creditsSource, onFinished));
+        StartCoroutine(Run(creditsSources, onFinished));
     }
 
-    private IEnumerator Run(TMP_Text creditsSource, Action onFinished)
+    private IEnumerator Run(IList<TMP_Text> creditsSources, Action onFinished)
     {
+        TMP_Text creditsSource = creditsSources != null && creditsSources.Count > 0 ? creditsSources[0] : null;
         // ---- build the overlay ----
         GameObject canvasGo = new GameObject("EndingSequence", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
         canvasGo.transform.SetParent(transform, false);
@@ -52,7 +54,7 @@ public class EndingSequence : MonoBehaviour
         TMP_FontAsset font = creditsSource != null ? creditsSource.font : null;
         TMP_Text fin = CreateText("Fin", canvasGo.transform, font, "fin.", 140f, FontStyles.Italic);
         TMP_Text thanks = CreateText("Thanks", canvasGo.transform, font, "thank you for playing", 84f, FontStyles.Normal);
-        TMP_Text credits = CreateText("Credits", canvasGo.transform, font, BuildCreditsText(creditsSource), 40f,
+        TMP_Text credits = CreateText("Credits", canvasGo.transform, font, BuildCreditsText(creditsSources), 40f,
                                       creditsSource != null ? creditsSource.fontStyle : FontStyles.Bold);
         SetAlpha(fin, 0f);
         SetAlpha(thanks, 0f);
@@ -108,10 +110,14 @@ public class EndingSequence : MonoBehaviour
 
     // ------------------------------------------------------------------ helpers
 
-    private static string BuildCreditsText(TMP_Text source)
+    private static string BuildCreditsText(IList<TMP_Text> sources)
     {
-        string body = source != null ? source.text : "";
-        return "<size=150%>Credits</size>\n\n" + body.Trim();
+        var sb = new System.Text.StringBuilder("<size=150%>Credits</size>");
+        if (sources != null)
+            foreach (TMP_Text t in sources)
+                if (t != null && !string.IsNullOrWhiteSpace(t.text))
+                    sb.Append("\n\n\n").Append(t.text.Trim());
+        return sb.ToString();
     }
 
     private static IEnumerator Fade(Action<float> apply, float duration)

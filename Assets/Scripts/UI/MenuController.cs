@@ -17,8 +17,8 @@ public class MenuController : MonoBehaviour
     int NumberOfLevels;
     [SerializeField] GameObject Player, Particles;
     [SerializeField] float waitForSeconds = 0.5f;
-    [Tooltip("Credits text on the Info screen; reused by the ending sequence.")]
-    [SerializeField] TMP_Text creditsText;
+    [Tooltip("Credits columns on the Info screen, in reading order; reused by the ending sequence.")]
+    [SerializeField] TMP_Text[] creditsTexts;
     private int profileIdToBeCreated;
     private int profileIdToBeDeleted;
     private int levelToStart = -1;
@@ -47,7 +47,7 @@ public class MenuController : MonoBehaviour
         profile.SetActive(false);
 
         EndingSequence ending = gameObject.AddComponent<EndingSequence>();
-        ending.Play(FindCreditsText(), () =>
+        ending.Play(FindCreditsTexts(), () =>
         {
             options.SetActive(true);
             title.SetActive(true);
@@ -55,26 +55,26 @@ public class MenuController : MonoBehaviour
         });
     }
 
-    private TMP_Text FindCreditsText()
+    private System.Collections.Generic.List<TMP_Text> FindCreditsTexts()
     {
-        if (creditsText != null)
-            return creditsText;
+        var result = new System.Collections.Generic.List<TMP_Text>();
+        if (creditsTexts != null)
+            foreach (TMP_Text t in creditsTexts)
+                if (t != null) result.Add(t);
+        if (result.Count > 0)
+            return result;
 
-        // Fallback: the longest text inside the (inactive) Info panel.
-        TMP_Text best = null;
+        // Fallback: the long texts inside the (inactive) Info panel, left column first.
         foreach (TMP_Text t in FindObjectsByType<TMP_Text>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {
+            if (t.text.Length < 100) continue;
             for (Transform p = t.transform; p != null; p = p.parent)
             {
-                if (p.name == "Info")
-                {
-                    if (best == null || t.text.Length > best.text.Length)
-                        best = t;
-                    break;
-                }
+                if (p.name == "Info") { result.Add(t); break; }
             }
         }
-        return best;
+        result.Sort((a, b) => a.rectTransform.anchoredPosition.x.CompareTo(b.rectTransform.anchoredPosition.x));
+        return result;
     }
 
     // Update is called once per frame
